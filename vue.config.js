@@ -99,7 +99,7 @@ module.exports = {
         ws: false,
         changeOrigin: true,
         pathRewrite: {
-          // '/api': ''
+          '/api': ''
         }
       }
     }

@@ -33,10 +33,16 @@ export const asyncRouterMap = [
         meta: { title: '设备管理', keepAlive: true, icon: bxAnaalyse },
         children: [
           {
-            path: 'list',
+            path: '/device/list',
             name: 'DeviceList',
-            component: () => import('@/views/Home'),
+            component: () => import('@/views/Device/List'),
             meta: { title: '设备列表', keepAlive: true }
+          },
+          {
+            path: '/device/create',
+            name: 'DeviceCreate',
+            component: () => import('@/views/Device/Create'),
+            meta: { title: '创建设备', keepAlive: true }
           }
         ]
       },
@@ -48,10 +54,16 @@ export const asyncRouterMap = [
         meta: { title: '场景管理', keepAlive: true, icon: bxAnaalyse },
         children: [
           {
-            path: 'list',
+            path: '/sence/list',
             name: 'SenceList',
-            component: () => import('@/views/Home'),
+            component: () => import('@/views/Sence/List'),
             meta: { title: '场景列表', keepAlive: true }
+          },
+          {
+            path: '/sence/create',
+            name: 'SenceCreate',
+            component: () => import('@/views/Sence/Create'),
+            meta: { title: '创建场景', keepAlive: true }
           }
         ]
       },
@@ -99,22 +111,22 @@ export const constantRouterMap = [
       {
         path: 'login',
         name: 'login',
-        component: () => import(/* webpackChunkName: "user" */ '@/views/user/Login')
+        component: () => import(/* webpackChunkName: "user" */ '@/views/User/Login')
       },
       {
         path: 'register',
         name: 'register',
-        component: () => import(/* webpackChunkName: "user" */ '@/views/user/Register')
+        component: () => import(/* webpackChunkName: "user" */ '@/views/User/Register')
       },
       {
         path: 'register-result',
         name: 'registerResult',
-        component: () => import(/* webpackChunkName: "user" */ '@/views/user/RegisterResult')
+        component: () => import(/* webpackChunkName: "user" */ '@/views/User/RegisterResult')
       }
     ]
   },
   {
     path: '/404',
-    component: () => import(/* webpackChunkName: "fail" */ '@/views/exception/404')
+    component: () => import(/* webpackChunkName: "fail" */ '@/views/Exception/404')
   }
 ]

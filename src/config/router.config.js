@@ -12,14 +12,14 @@ export const asyncRouterMap = [
     children: [
       {
         path: '/home',
-        name: 'Home',
+        name: 'control',
         redirect: '/home',
         component: RouteView,
         meta: { title: '控制中心', keepAlive: true, icon: bxAnaalyse },
         children: [
           {
             path: '/home/index',
-            name: 'Index',
+            name: 'home',
             component: () => import('@/views/Home'),
             meta: { title: '欢迎', keepAlive: true }
           }
@@ -27,20 +27,20 @@ export const asyncRouterMap = [
       },
       {
         path: '/device',
-        name: 'Device',
+        name: 'device',
         redirect: '/device/list',
         component: RouteView,
         meta: { title: '设备管理', keepAlive: true, icon: bxAnaalyse },
         children: [
           {
             path: '/device/list',
-            name: 'DeviceList',
+            name: 'deviceList',
             component: () => import('@/views/Device/List'),
             meta: { title: '设备列表', keepAlive: true }
           },
           {
             path: '/device/create',
-            name: 'DeviceCreate',
+            name: 'deviceCreate',
             component: () => import('@/views/Device/Create'),
             meta: { title: '创建设备', keepAlive: true }
           }
@@ -48,20 +48,20 @@ export const asyncRouterMap = [
       },
       {
         path: '/sence',
-        name: 'Sence',
+        name: 'sence',
         redirect: '/sence/list',
         component: RouteView,
         meta: { title: '场景管理', keepAlive: true, icon: bxAnaalyse },
         children: [
           {
             path: '/sence/list',
-            name: 'SenceList',
+            name: 'senceList',
             component: () => import('@/views/Sence/List'),
             meta: { title: '场景列表', keepAlive: true }
           },
           {
             path: '/sence/create',
-            name: 'SenceCreate',
+            name: 'senceCreate',
             component: () => import('@/views/Sence/Create'),
             meta: { title: '创建场景', keepAlive: true }
           }
@@ -69,20 +69,20 @@ export const asyncRouterMap = [
       },
       {
         path: '/system',
-        name: 'System',
+        name: 'system',
         redirect: '/system/user',
         component: RouteView,
         meta: { title: '系统管理', keepAlive: true, icon: bxAnaalyse },
         children: [
           {
             path: 'user',
-            name: 'SystemUser',
+            name: 'systemUser',
             component: () => import('@/views/Home'),
             meta: { title: '用户中心', keepAlive: true }
           },
           {
             path: 'user',
-            name: 'SystemSetting',
+            name: 'systemSetting',
             component: () => import('@/views/Home'),
             meta: { title: '系统设置', keepAlive: true }
           }

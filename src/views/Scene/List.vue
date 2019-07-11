@@ -1,9 +1,9 @@
 <template>
   <div class="card-list" ref="content">
-    <a-list :grid="{gutter: 24, lg: 3, md: 2, sm: 1, xs: 1}" :dataSource="list">
+    <a-list :grid="{gutter: 24, lg: 4, md: 2, sm: 1, xs: 1}" :dataSource="list">
       <a-list-item slot="renderItem" slot-scope="item">
         <template v-if="item === null">
-          <a-button class="new-btn" type="dashed">
+          <a-button class="new-btn" type="dashed" @click="$refs.createSceneModal.create()">
             <a-icon type="plus" />新增场景
           </a-button>
         </template>
@@ -21,11 +21,13 @@
         </template>
       </a-list-item>
     </a-list>
+    <create-scene-model ref="createSceneModal" @ok="handleOk" />
   </div>
 </template>
 
 <script>
 import { mapActions, mapState } from 'vuex'
+import CreateSceneModel from './modules/Create'
 
 const defaultQuery = {
   page: 0,
@@ -34,19 +36,23 @@ const defaultQuery = {
 
 export default {
   name: 'CardList',
-  data() {
+  data () {
     return {}
   },
+  components: { CreateSceneModel },
   computed: {
     ...mapState({
-      list: state => state.sence.list
+      list: state => [null, ...state.scene.list]
     })
   },
-  created() {
-    this.QuerySenceList(defaultQuery)
+  created () {
+    this.QuerySceneList(defaultQuery)
+    this.QueryPreInstallTemplate()
+    this.QuerySceneType()
   },
   methods: {
-    ...mapActions(['QuerySenceList'])
+    ...mapActions(['QuerySceneList', 'QueryPreInstallTemplate', 'QuerySceneType']),
+    handleOk () {}
   }
 }
 </script>

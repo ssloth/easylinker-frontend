@@ -3,29 +3,29 @@ import { axios } from '@/utils/request'
 /**
  * 添加场景
  */
-export function addSence (parameter) {
+export function addScene (data) {
   return axios({
     url: '/easyboot/scene/add',
     method: 'post',
-    data: parameter
+    data
   })
 }
 
 /**
  * 添加自定义场景
  */
-export function addCustomScene (parameter) {
+export function addCustomScene (data) {
   return axios({
     url: '/easyboot/scene/add',
     method: 'post',
-    data: parameter
+    data
   })
 }
 
 /**
  * 查询场景列表
  */
-export function querySenceList (parameter) {
+export function querySceneList (parameter) {
   return axios({
     url: '/easyboot/scene/list',
     method: 'get',
@@ -47,10 +47,20 @@ export function querySceneType (parameter) {
 /**
  * 查询场景下设备
  */
-export function querySenceDevice (parameter) {
+export function querySceneDevice (parameter) {
   return axios({
     url: '/easyboot/scene/listDevice',
     method: 'get',
     params: parameter
+  })
+}
+
+/**
+ * 获取预装模板
+ */
+export function queryPreInstallTemplate () {
+  return axios({
+    url: '/easyboot/scene/listPreInstallTemplate',
+    method: 'get'
   })
 }

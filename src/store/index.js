@@ -5,7 +5,7 @@ import app from './modules/app'
 import user from './modules/user'
 import permission from './modules/permission'
 import getters from './getters'
-import sence from './modules/sence'
+import scene from './modules/scene'
 
 Vue.use(Vuex)
 
@@ -14,7 +14,7 @@ export default new Vuex.Store({
     app,
     user,
     permission,
-    sence
+    scene
   },
   state: {},
   mutations: {},

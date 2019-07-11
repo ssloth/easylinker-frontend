@@ -47,22 +47,22 @@ export const asyncRouterMap = [
         ]
       },
       {
-        path: '/sence',
-        name: 'sence',
-        redirect: '/sence/list',
+        path: '/scene',
+        name: 'scene',
+        redirect: '/scene/list',
         component: RouteView,
         meta: { title: '场景管理', keepAlive: true, icon: bxAnaalyse },
         children: [
           {
-            path: '/sence/list',
-            name: 'senceList',
-            component: () => import('@/views/Sence/List'),
+            path: '/scene/list',
+            name: 'sceneList',
+            component: () => import('@/views/Scene/List'),
             meta: { title: '场景列表', keepAlive: true }
           },
           {
-            path: '/sence/create',
-            name: 'senceCreate',
-            component: () => import('@/views/Sence/Create'),
+            path: '/scene/create',
+            name: 'sceneCreate',
+            component: () => import('@/views/Scene/Create'),
             meta: { title: '创建场景', keepAlive: true }
           }
         ]

@@ -50,18 +50,12 @@ service.interceptors.request.use(config => {
 
 // response interceptor
 service.interceptors.response.use(response => {
-  console.log('=>', response)
-  return response.data
-}, err)
-
-// request interceptor
-service.interceptors.request.use(data => {
+  const { data } = response
   const { code } = data
-  console.log(data)
   if (code === 501) {
     notification.error({
-      message: 'Unauthorized',
-      description: 'Authorization verification failed'
+      message: '登录过期',
+      description: '登录过期！请重新登录！'
     })
     store.dispatch('Logout').then(() => {
       setTimeout(() => {

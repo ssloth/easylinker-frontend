@@ -1,4 +1,9 @@
+import store from '@/store'
 import { querySceneList, queryPreInstallTemplate, querySceneType, addScene } from '@/api/scene'
+const defaultQuery = {
+  page: 0,
+  size: 10
+}
 const scene = {
   state: {
     list: [],
@@ -40,10 +45,17 @@ const scene = {
       commit('SET_SENCE_TYPE', data)
     },
     async AddScene ({ commit }, data) {
-      commit('SET_SUBMIT_LOADING', false)
-      const respent = await addScene(data)
       commit('SET_SUBMIT_LOADING', true)
-      return respent
+      try {
+        const respent = await addScene(data)
+        await store.dispatch('QuerySceneList', defaultQuery)
+        commit('SET_SUBMIT_LOADING', false)
+        return respent
+      } catch (error) {
+        console.log(error)
+        commit('SET_SUBMIT_LOADING', false)
+        return error
+      }
     }
   }
 }

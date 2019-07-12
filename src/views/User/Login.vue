@@ -148,7 +148,6 @@ export default {
 
       validateFields(validateFieldsKey, { force: true }, (err, values) => {
         if (!err) {
-          console.log('login form', values)
           const loginParams = { ...values, uuid }
           Login(loginParams)
             .then(res => this.loginSuccess(res))
@@ -173,8 +172,7 @@ export default {
       })
     },
     loginSuccess (res) {
-      console.log(res)
-      this.$router.push({ name: 'Home' })
+      this.$router.push({ name: 'home' })
       // 延迟 1 秒显示欢迎信息
       setTimeout(() => {
         this.$notification.success({

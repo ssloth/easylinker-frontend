@@ -15,7 +15,12 @@
           </a-select>
         </a-form-item>
         <a-form-item label="场景模板" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-select v-decorator="['preInstallTemplate']" :disabled="preInstallTemplateDisabled">
+          <a-select
+            v-decorator="['preInstallTemplate',{
+              initialValue: preInstallTemplateList[0] && preInstallTemplateList[0].key
+            }]"
+            :disabled="preInstallTemplateDisabled"
+          >
             <a-select-option
               v-for="item in preInstallTemplateList"
               :key="item.key"
@@ -37,7 +42,7 @@
 import { mapState, mapActions } from 'vuex'
 
 export default {
-  data() {
+  data () {
     return {
       labelCol: {
         xs: { span: 24 },
@@ -61,17 +66,18 @@ export default {
   },
   methods: {
     ...mapActions(['AddScene']),
-    create() {
+    create () {
       this.visible = true
     },
-    handleSceneTypeListChange(e) {
+    handleSceneTypeListChange (e) {
+      const { preInstallTemplateList } = this
       // TODO 后续扩展情况
       if (e === 'CUSTOM') {
         this.preInstallTemplateDisabled = true
-        this.form.setFieldsValue({ preInstallTemplate: null })
+        this.form.setFieldsValue({ preInstallTemplate: preInstallTemplateList[0] && preInstallTemplateList[0].key })
       } else this.preInstallTemplateDisabled = false
     },
-    handleSubmit() {
+    handleSubmit () {
       const {
         form: { validateFields }
       } = this
@@ -80,13 +86,14 @@ export default {
         if (!errors) {
           this.AddScene(values).then(res => {
             this.confirmLoading = false
+            this.visible = false
           })
         } else {
           this.confirmLoading = false
         }
       })
     },
-    handleCancel() {
+    handleCancel () {
       this.visible = false
     }
   }

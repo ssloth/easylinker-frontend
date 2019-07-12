@@ -58,13 +58,13 @@ export const asyncRouterMap = [
             name: 'sceneList',
             component: () => import('@/views/Scene/List'),
             meta: { title: '场景列表', keepAlive: true }
-          },
-          {
-            path: '/scene/create',
-            name: 'sceneCreate',
-            component: () => import('@/views/Scene/Create'),
-            meta: { title: '创建场景', keepAlive: true }
           }
+          // {
+          //   path: '/scene/create',
+          //   name: 'sceneCreate',
+          //   component: () => import('@/views/Scene/Create'),
+          //   meta: { title: '创建场景', keepAlive: true }
+          // }
         ]
       },
       {

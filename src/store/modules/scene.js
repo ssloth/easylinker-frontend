@@ -8,7 +8,7 @@ const scene = {
   state: {
     list: [],
     preInstallTemplate: {},
-    sceneType: {},
+    sceneType: [],
     loading: {
       submitLoading: false
     }
@@ -25,7 +25,7 @@ const scene = {
       state.sceneType = sceneType
     },
     SET_SUBMIT_LOADING (state, loading) {
-      state.sceneType = loading
+      state.loading.submitLoading = loading
     }
   },
 
@@ -52,7 +52,6 @@ const scene = {
         commit('SET_SUBMIT_LOADING', false)
         return respent
       } catch (error) {
-        console.log(error)
         commit('SET_SUBMIT_LOADING', false)
         return error
       }

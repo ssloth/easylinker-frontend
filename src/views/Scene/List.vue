@@ -21,7 +21,7 @@
         </template>
       </a-list-item>
     </a-list>
-    <create-scene-model ref="createSceneModal" @ok="handleOk" />
+    <create-scene-model destroyOnClose ref="createSceneModal" @ok="handleOk" />
   </div>
 </template>
 
@@ -31,7 +31,7 @@ import CreateSceneModel from './modules/Create'
 
 const defaultQuery = {
   page: 0,
-  size: 10
+  size: 100
 }
 
 export default {

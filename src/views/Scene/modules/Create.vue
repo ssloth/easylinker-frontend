@@ -69,6 +69,12 @@ export default {
     create () {
       this.visible = true
     },
+    resetForm () {
+      const { preInstallTemplateList } = this
+      this.preInstallTemplateDisabled = true
+      this.form.setFieldsValue({ preInstallTemplate: preInstallTemplateList[0] && preInstallTemplateList[0].key })
+      this.form.resetFields()
+    },
     handleSceneTypeListChange (e) {
       const { preInstallTemplateList } = this
       // TODO 后续扩展情况
@@ -87,6 +93,7 @@ export default {
           this.AddScene(values).then(res => {
             this.confirmLoading = false
             this.visible = false
+            this.resetForm()
           })
         } else {
           this.confirmLoading = false

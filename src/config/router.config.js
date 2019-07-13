@@ -37,13 +37,13 @@ export const asyncRouterMap = [
             name: 'deviceList',
             component: () => import('@/views/Device/List'),
             meta: { title: '设备列表', keepAlive: true }
-          },
-          {
-            path: '/device/create',
-            name: 'deviceCreate',
-            component: () => import('@/views/Device/Create'),
-            meta: { title: '创建设备', keepAlive: true }
           }
+          // {
+          //   path: '/device/create',
+          //   name: 'deviceCreate',
+          //   component: () => import('@/views/Device/Create'),
+          //   meta: { title: '创建设备', keepAlive: true }
+          // }
         ]
       },
       {

@@ -7,11 +7,14 @@ import {
   queryDeviceDetail,
   addDeviceCoAP,
   addDeviceMQTT,
-  addDeviceHTTP
+  addDeviceHTTP,
+  queryDeviceType,
+  queryDeviceProtocol
 } from '@/api/device'
 const device = {
   state: {
     list: [],
+    deviceTypeList: [],
     device: {
       detail: {},
       data: []
@@ -20,6 +23,12 @@ const device = {
   mutations: {
     SET_DEVICE_LIST (state, list) {
       state.list = list
+    },
+    SET_DEVICE_TYPE_LIST (state, deviceTypeList) {
+      state.deviceTypeList = deviceTypeList
+    },
+    SET_DEVICE_PROTOCOL_LIST (state, deviceProtocolList) {
+      state.deviceProtocolList = deviceProtocolList
     },
     SET_DEVICE_DETAIL (state, detail) {
       state.device.detail = detail
@@ -48,16 +57,20 @@ const device = {
       commit('SET_DEVICE_LIST', content)
     },
     async QueryDeviceData ({ commit }, parameter) {
-      const {
-        data: { content }
-      } = await queryDeviceData(parameter)
-      commit('SET_DEVICE_DATA', content)
+      const { data } = await queryDeviceData(parameter)
+      commit('SET_DEVICE_DATA', data)
     },
     async QueryDeviceDetail ({ commit }, parameter) {
-      const {
-        data: { content }
-      } = await queryDeviceDetail(parameter)
-      commit('SET_DEVICE_DETAIL', content)
+      const { data } = await queryDeviceDetail(parameter)
+      commit('SET_DEVICE_DETAIL', data)
+    },
+    async QueryDeviceType ({ commit }, data) {
+      const response = await queryDeviceType(data)
+      commit('SET_DEVICE_TYPE', response.data)
+    },
+    async QueryDeviceProtocol ({ commit }, data) {
+      const response = await queryDeviceProtocol(data)
+      commit('SET_DEVICE_PROTOCOL', response.data)
     },
     async AddDeviceCoAP ({ commit }, data) {
       await addDeviceCoAP(data)

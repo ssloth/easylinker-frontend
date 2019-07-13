@@ -9,7 +9,9 @@ const getters = {
   roles: state => state.user.roles,
   userInfo: state => state.user.info,
   addRouters: state => state.permission.addRouters,
-  multiTab: state => state.app.multiTab
+  multiTab: state => state.app.multiTab,
+
+  sceneListSelect: state => state.scene.list.map(item => ({ name: item.name, key: item.securityId }))
 }
 
 export default getters

@@ -60,8 +60,8 @@ export default {
   },
   computed: {
     ...mapState({
-      preInstallTemplateList: state => state.scene.preInstallTemplate,
-      sceneTypeList: state => state.scene.sceneType
+      preInstallTemplateList: state => state.scene.preInstallTemplateList,
+      sceneTypeList: state => state.scene.sceneTypeList
     })
   },
   methods: {

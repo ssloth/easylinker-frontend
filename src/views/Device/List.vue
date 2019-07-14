@@ -106,7 +106,7 @@
         <template>
           <a @click="handleEdit(record)">配置</a>
           <a-divider type="vertical" />
-          <a @click="handleSub(record)">订阅报警</a>
+          <a @click="handleSub(record)">操作</a>
         </template>
       </span>
     </s-table>
@@ -119,7 +119,7 @@ import moment from 'moment'
 import { STable, Ellipsis } from '@/components'
 import CreateModal from './modules/Create'
 import { getRoleList, getServiceList } from '@/api/manage'
-import { mapActions, mapState, mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 const statusMap = {
   0: {
@@ -148,7 +148,7 @@ export default {
     CreateModal
     // StepByStepModal
   },
-  data() {
+  data () {
     return {
       mdl: {},
       // 高级搜索 展开/关闭
@@ -162,23 +162,23 @@ export default {
           scopedSlots: { customRender: 'serial' }
         },
         {
-          title: '规则编号',
+          title: '设备编号',
           dataIndex: 'no'
         },
         {
-          title: '描述',
+          title: '设备名称',
           dataIndex: 'description',
           scopedSlots: { customRender: 'description' }
         },
         {
-          title: '服务调用次数',
+          title: '设备类型',
           dataIndex: 'callNo',
           sorter: true,
           needTotal: true,
           customRender: text => text + ' 次'
         },
         {
-          title: '状态',
+          title: '协议类型',
           dataIndex: 'status',
           scopedSlots: { customRender: 'status' }
         },
@@ -221,17 +221,17 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['senceListSelect']),
+    ...mapGetters(['senceListSelect'])
   },
   filters: {
-    statusFilter(type) {
+    statusFilter (type) {
       return statusMap[type].text
     },
-    statusTypeFilter(type) {
+    statusTypeFilter (type) {
       return statusMap[type].status
     }
   },
-  created() {
+  created () {
     this.tableOption()
     this.QuerySceneList()
     this.QueryDeviceType()
@@ -249,7 +249,7 @@ export default {
       'QueryDeviceType',
       'QueryDeviceProtocol'
     ]),
-    tableOption() {
+    tableOption () {
       if (!this.optionAlertShow) {
         this.options = {
           alert: {
@@ -278,28 +278,28 @@ export default {
         this.optionAlertShow = false
       }
     },
-    handleEdit(record) {
+    handleEdit (record) {
       console.log(record)
       this.$refs.modal.edit(record)
     },
-    handleSub(record) {
+    handleSub (record) {
       if (record.status !== 0) {
         this.$message.info(`${record.no} 订阅成功`)
       } else {
         this.$message.error(`${record.no} 订阅失败，规则已关闭`)
       }
     },
-    handleOk() {
+    handleOk () {
       this.$refs.table.refresh()
     },
-    onSelectChange(selectedRowKeys, selectedRows) {
+    onSelectChange (selectedRowKeys, selectedRows) {
       this.selectedRowKeys = selectedRowKeys
       this.selectedRows = selectedRows
     },
-    toggleAdvanced() {
+    toggleAdvanced () {
       this.advanced = !this.advanced
     },
-    resetSearchForm() {
+    resetSearchForm () {
       this.queryParam = {
         date: moment(new Date())
       }

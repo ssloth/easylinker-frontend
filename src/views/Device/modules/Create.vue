@@ -10,7 +10,7 @@
         <!-- step1 -->
         <div v-show="currentStep === 0">
           <a-form-item label="场景名" :labelCol="labelCol" :wrapperCol="wrapperCol">
-            <a-select showSearch v-decorator="['sceneSecurityId']" @change="handleSceneTypeListChange">
+            <a-select showSearch v-decorator="['sceneSecurityId']">
               <a-select-option
                 v-for="item in sceneListSelect"
                 :key="item.key"
@@ -22,7 +22,7 @@
 
         <div v-show="currentStep === 1">
           <a-form-item label="设备类型" :labelCol="labelCol" :wrapperCol="wrapperCol">
-            <a-select showSearch v-decorator="['deviceType']" @change="handleSceneTypeListChange">
+            <a-select showSearch v-decorator="['deviceType']">
               <a-select-option
                 v-for="item in deviceTypeList"
                 :key="item.key"
@@ -31,7 +31,7 @@
             </a-select>
           </a-form-item>
           <a-form-item label="协议类型" :labelCol="labelCol" :wrapperCol="wrapperCol">
-            <a-select showSearch v-decorator="['deviceProtocol']" @change="handleSceneTypeListChange">
+            <a-select showSearch v-decorator="['deviceProtocol']">
               <a-select-option
                 v-for="item in deviceProtocolList"
                 :key="item.key"
@@ -40,7 +40,6 @@
             </a-select>
           </a-form-item>
         </div>
-
         <div v-show="currentStep === 2">
           <a-form-item label="设备名" :labelCol="labelCol" :wrapperCol="wrapperCol">
             <a-input v-decorator="['name', {rules: [{required: true, message: '请输入设备名称！'}]}]" />
@@ -64,7 +63,7 @@
         :loading="confirmLoading"
         type="primary"
         @click="handleNext(currentStep)"
-      >{{ currentStep === 2 && '完成' || '下一步' }}</a-button>
+      >{{ currentStep >= 2 && '完成' || '下一步' }}</a-button>
     </template>
   </a-modal>
 </template>
@@ -72,7 +71,7 @@
 <script>
 import { mapActions, mapState, mapGetters } from 'vuex'
 export default {
-  data() {
+  data () {
     return {
       labelCol: {
         xs: { span: 24 },
@@ -84,7 +83,8 @@ export default {
       },
       confirmLoading: false,
       visible: false,
-      currentStep: 0
+      currentStep: 0,
+      form: this.$form.createForm(this)
     }
   },
   computed: {
@@ -95,15 +95,40 @@ export default {
     ...mapGetters(['sceneListSelect'])
   },
   methods: {
-    create() {
+    ...mapActions(['createDeviceCoAP', 'createDeviceHTTP', 'createDeviceMQTT']),
+    create () {
       this.visible = true
     },
-    handleBackward() {
+    handleBackward () {
       this.currentStep -= 1
     },
-    handleCancel() {},
-    handleNext() {
+    handleCancel () {
+      this.visible = false
+    },
+    handleNext () {
+      if (this.currentStep === 2) {
+        this.submit()
+      }
       this.currentStep += 1
+    },
+    submit () {
+      const {
+        form: { validateFields }
+      } = this
+
+      validateFields((errors, values) => {
+        if (!errors) {
+          this.confirmLoading = false
+          this.visible = false
+          // this.AddScene(values).then(res => {
+          //   this.confirmLoading = false
+          //   this.visible = false
+          //   this.resetForm()
+          // })
+        } else {
+          this.confirmLoading = false
+        }
+      })
     }
   }
 }

@@ -15,6 +15,7 @@ const device = {
   state: {
     list: [],
     deviceTypeList: [],
+    deviceProtocolList: [],
     device: {
       detail: {},
       data: []
@@ -66,11 +67,11 @@ const device = {
     },
     async QueryDeviceType ({ commit }, data) {
       const response = await queryDeviceType(data)
-      commit('SET_DEVICE_TYPE', response.data)
+      commit('SET_DEVICE_TYPE_LIST', response.data)
     },
     async QueryDeviceProtocol ({ commit }, data) {
       const response = await queryDeviceProtocol(data)
-      commit('SET_DEVICE_PROTOCOL', response.data)
+      commit('SET_DEVICE_PROTOCOL_LIST', response.data)
     },
     async AddDeviceCoAP ({ commit }, data) {
       await addDeviceCoAP(data)

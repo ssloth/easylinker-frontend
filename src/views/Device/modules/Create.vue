@@ -1,69 +1,56 @@
 <template>
   <a-modal title="新建设备" :visible="visible" :confirmLoading="confirmLoading" @cancel="handleCancel">
-    <a-spin :spinning="confirmLoading">
-      <a-steps :current="currentStep" :style="{ marginBottom: '28px' }" size="small">
-        <a-step title="选择场景" />
-        <a-step title="选择设备类型" />
-        <a-step title="创建设备" />
-      </a-steps>
-      <a-form :form="form">
-        <!-- step1 -->
-        <div v-show="currentStep === 0">
-          <a-form-item label="场景名" :labelCol="labelCol" :wrapperCol="wrapperCol">
-            <a-select showSearch v-decorator="['sceneSecurityId']">
-              <a-select-option
-                v-for="item in sceneListSelect"
-                :key="item.key"
-                :value="item.key"
-              >{{ item.name }}</a-select-option>
-            </a-select>
-          </a-form-item>
-        </div>
+    <a-form :form="form">
+      <!-- step1 -->
+      <div v-show="currentStep === 0">
+        <a-form-item label="场景名" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <a-select
+            showSearch
+            v-decorator="['sceneSecurityId', {rules: [{required: true, message: '请选择场景！'}]}]"
+          >
+            <a-select-option
+              v-for="item in sceneListSelect"
+              :key="item.key"
+              :value="item.key"
+            >{{ item.name }}</a-select-option>
+          </a-select>
+        </a-form-item>
+      </div>
 
-        <div v-show="currentStep === 1">
-          <a-form-item label="设备类型" :labelCol="labelCol" :wrapperCol="wrapperCol">
-            <a-select showSearch v-decorator="['deviceType']">
-              <a-select-option
-                v-for="item in deviceTypeList"
-                :key="item.key"
-                :value="item.key"
-              >{{ item.name }}</a-select-option>
-            </a-select>
-          </a-form-item>
-          <a-form-item label="协议类型" :labelCol="labelCol" :wrapperCol="wrapperCol">
-            <a-select showSearch v-decorator="['deviceProtocol']">
-              <a-select-option
-                v-for="item in deviceProtocolList"
-                :key="item.key"
-                :value="item.key"
-              >{{ item.name }}</a-select-option>
-            </a-select>
-          </a-form-item>
-        </div>
-        <div v-show="currentStep === 2">
-          <a-form-item label="设备名" :labelCol="labelCol" :wrapperCol="wrapperCol">
-            <a-input v-decorator="['name', {rules: [{required: true, message: '请输入设备名称！'}]}]" />
-          </a-form-item>
-          <a-form-item label="设备描述" :labelCol="labelCol" :wrapperCol="wrapperCol">
-            <a-input v-decorator="['info', {rules: [{required: true, message: '请输入设备描述！'}]}]" />
-          </a-form-item>
-        </div>
-      </a-form>
-    </a-spin>
+      <a-form-item label="设备类型" :labelCol="labelCol" :wrapperCol="wrapperCol">
+        <a-select
+          showSearch
+          v-decorator="['deviceType', {rules: [{required: true, message: '请选择设备类型！'}]}]"
+        >
+          <a-select-option
+            v-for="item in deviceTypeList"
+            :key="item.key"
+            :value="item.key"
+          >{{ item.name }}</a-select-option>
+        </a-select>
+      </a-form-item>
+      <a-form-item label="协议类型" :labelCol="labelCol" :wrapperCol="wrapperCol">
+        <a-select
+          showSearch
+          v-decorator="['deviceProtocol',{rules: [{required: true, message: '请选择协议类型！'}]}]"
+        >
+          <a-select-option
+            v-for="item in deviceProtocolList"
+            :key="item.key"
+            :value="item.key"
+          >{{ item.name }}</a-select-option>
+        </a-select>
+      </a-form-item>
+      <a-form-item label="设备名" :labelCol="labelCol" :wrapperCol="wrapperCol">
+        <a-input v-decorator="['name', {rules: [{required: true, message: '请输入设备名称！'}]}]" />
+      </a-form-item>
+      <a-form-item label="设备描述" :labelCol="labelCol" :wrapperCol="wrapperCol">
+        <a-input v-decorator="['info', {rules: [{required: true, message: '请输入设备描述！'}]}]" />
+      </a-form-item>
+    </a-form>
     <template slot="footer">
-      <a-button
-        key="back"
-        @click="handleBackward"
-        v-if="currentStep > 0"
-        :style="{ float: 'left' }"
-      >上一步</a-button>
       <a-button key="cancel" @click="handleCancel">取消</a-button>
-      <a-button
-        key="forward"
-        :loading="confirmLoading"
-        type="primary"
-        @click="handleNext(currentStep)"
-      >{{ currentStep >= 2 && '完成' || '下一步' }}</a-button>
+      <a-button key="forward" :loading="confirmLoading" type="primary" @click="submit">完成</a-button>
     </template>
   </a-modal>
 </template>
@@ -95,7 +82,7 @@ export default {
     ...mapGetters(['sceneListSelect'])
   },
   methods: {
-    ...mapActions(['createDeviceCoAP', 'createDeviceHTTP', 'createDeviceMQTT']),
+    ...mapActions(['AddDevice']),
     create () {
       this.visible = true
     },
@@ -113,18 +100,16 @@ export default {
     },
     submit () {
       const {
+        AddDevice,
         form: { validateFields }
       } = this
 
       validateFields((errors, values) => {
         if (!errors) {
-          this.confirmLoading = false
-          this.visible = false
-          // this.AddScene(values).then(res => {
-          //   this.confirmLoading = false
-          //   this.visible = false
-          //   this.resetForm()
-          // })
+          AddDevice(values).then(res => {
+            this.confirmLoading = false
+            this.visible = false
+          })
         } else {
           this.confirmLoading = false
         }

@@ -1,5 +1,15 @@
 <template>
-  <a-card :bordered="false">
+  <a-card type="card" :bordered="false">
+    <div>
+      <a-tabs defaultActiveKey="0" @change="handleTabChange">
+        <a-tab-pane
+          v-for="item in deviceProtocolList"
+          :tab="item.name | deviceProtocolFilter"
+          :key="item.key"
+        ></a-tab-pane>
+        <a-button slot="tabBarExtraContent" @click="$refs.createModal.create()">添加设备</a-button>
+      </a-tabs>
+    </div>
     <div class="table-page-search-wrapper">
       <a-form layout="inline">
         <a-row :gutter="48">
@@ -64,33 +74,12 @@
       </a-form>
     </div>
 
-    <div class="table-operator">
-      <a-button type="primary" icon="plus" @click="$refs.createModal.create()">新建</a-button>
-      <a-button type="dashed" @click="tableOption">{{ optionAlertShow && '关闭' || '开启' }} alert</a-button>
-      <a-dropdown v-action:edit v-if="selectedRowKeys.length > 0">
-        <a-menu slot="overlay">
-          <a-menu-item key="1">
-            <a-icon type="delete" />删除
-          </a-menu-item>
-          <!-- lock | unlock -->
-          <a-menu-item key="2">
-            <a-icon type="lock" />锁定
-          </a-menu-item>
-        </a-menu>
-        <a-button style="margin-left: 8px">
-          批量操作
-          <a-icon type="down" />
-        </a-button>
-      </a-dropdown>
-    </div>
-
     <s-table
       ref="table"
       size="default"
       rowKey="key"
       :columns="columns"
       :data="loadData"
-      :alert="options.alert"
       :rowSelection="options.rowSelection"
       showPagination="auto"
     >
@@ -118,9 +107,9 @@
 import moment from 'moment'
 import { STable, Ellipsis } from '@/components'
 import CreateModal from './modules/Create'
-import { getRoleList, getServiceList } from '@/api/manage'
-import { mapActions, mapGetters } from 'vuex'
-
+import { getRoleList } from '@/api/manage'
+import { mapActions, mapGetters, mapState } from 'vuex'
+import * as columns from './columns'
 const statusMap = {
   0: {
     status: 'default',
@@ -156,54 +145,12 @@ export default {
       // 查询参数
       queryParam: {},
       // 表头
-      columns: [
-        {
-          title: '#',
-          scopedSlots: { customRender: 'serial' }
-        },
-        {
-          title: '设备编号',
-          dataIndex: 'no'
-        },
-        {
-          title: '设备名称',
-          dataIndex: 'description',
-          scopedSlots: { customRender: 'description' }
-        },
-        {
-          title: '设备类型',
-          dataIndex: 'callNo',
-          sorter: true,
-          needTotal: true,
-          customRender: text => text + ' 次'
-        },
-        {
-          title: '协议类型',
-          dataIndex: 'status',
-          scopedSlots: { customRender: 'status' }
-        },
-        {
-          title: '更新时间',
-          dataIndex: 'updatedAt',
-          sorter: true
-        },
-        {
-          title: '操作',
-          dataIndex: 'action',
-          width: '150px',
-          scopedSlots: { customRender: 'action' }
-        }
-      ],
-      // 加载数据方法 必须为 Promise 对象
-      loadData: parameter => {
-        console.log('loadData.parameter', parameter)
-        return getServiceList(Object.assign(parameter, this.queryParam)).then(res => {
-          return res.result
-        })
-      },
+      columns: [],
       selectedRowKeys: [],
       selectedRows: [],
-
+      loadData: parameter => {
+        return this.QueryDevice(Object.assign(parameter, this.queryParam))
+      },
       // custom table alert & rowSelection
       options: {
         alert: {
@@ -221,9 +168,17 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['senceListSelect'])
+    ...mapState({
+      list: state => state.device.list,
+      deviceTypeList: state => state.device.deviceTypeList,
+      deviceProtocolList: state => state.device.deviceProtocolList
+    }),
+    ...mapGetters(['sceneListSelect'])
   },
   filters: {
+    deviceProtocolFilter (name) {
+      return name.replace('协议设备', '').replace('暂不选择协议', '')
+    },
     statusFilter (type) {
       return statusMap[type].text
     },
@@ -232,18 +187,24 @@ export default {
     }
   },
   created () {
+    this.QueryDeviceType()
     this.tableOption()
     this.QuerySceneList()
-    this.QueryDeviceType()
-    this.QueryDeviceProtocol()
+    this.QueryDeviceProtocol().then(res => {
+      const { deviceProtocolList } = this
+      this.queryParam = {
+        deviceProtocol: deviceProtocolList[0].key
+      }
+      this.loadData = parameter => {
+        return this.QueryDevice(Object.assign(parameter, this.queryParam))
+      }
+    })
     getRoleList({ t: new Date() })
   },
   methods: {
     ...mapActions([
       'QuerySceneList',
-      'QueryDeviceCoAP',
-      'QueryDeviceMQTT',
-      'QueryDeviceHTTP',
+      'QueryDevice',
       'QueryDeviceData',
       'QueryDeviceDetail',
       'QueryDeviceType',
@@ -291,6 +252,10 @@ export default {
     },
     handleOk () {
       this.$refs.table.refresh()
+    },
+    handleTabChange (deviceProtocol) {
+      this.$refs.table.refresh()
+      this.columns = columns[`columns${deviceProtocol}`]
     },
     onSelectChange (selectedRowKeys, selectedRows) {
       this.selectedRowKeys = selectedRowKeys

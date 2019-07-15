@@ -1,10 +1,12 @@
 import store from '@/store'
 import { merge } from 'lodash'
 import { querySceneList, queryPreInstallTemplate, querySceneType, addScene } from '@/api/scene'
+
 const defaultQuery = {
   page: 0,
   size: 100
 }
+
 const scene = {
   state: {
     list: [],

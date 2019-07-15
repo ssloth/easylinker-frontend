@@ -1,16 +1,19 @@
 // import store from '@/store'
+import { merge } from 'lodash'
 import {
-  queryDeviceCoAP,
-  queryDeviceHTTP,
-  queryDeviceMQTT,
+  addDevice,
+  queryDevice,
   queryDeviceData,
   queryDeviceDetail,
-  addDeviceCoAP,
-  addDeviceMQTT,
-  addDeviceHTTP,
   queryDeviceType,
   queryDeviceProtocol
 } from '@/api/device'
+
+const defaultQuery = {
+  page: 0,
+  size: 10
+}
+
 const device = {
   state: {
     list: [],
@@ -39,23 +42,25 @@ const device = {
     }
   },
   actions: {
-    async QueryDeviceCoAP ({ commit }, parameter) {
-      const {
-        data: { content }
-      } = await queryDeviceCoAP(parameter)
-      commit('SET_DEVICE_LIST', content)
+    async AddDevice ({ commit }, data) {
+      const response = await addDevice(data)
+      return response
     },
-    async QueryDeviceMQTT ({ commit }, parameter) {
+    async QueryDevice ({ commit }, parameter) {
       const {
-        data: { content }
-      } = await queryDeviceMQTT(parameter)
-      commit('SET_DEVICE_LIST', content)
-    },
-    async QueryDeviceHTTP ({ commit }, parameter) {
-      const {
-        data: { content }
-      } = await queryDeviceHTTP(parameter)
-      commit('SET_DEVICE_LIST', content)
+        data: { content },
+        size,
+        number,
+        totalElements
+      } = await queryDevice(merge(defaultQuery, parameter))
+      return {
+        data: content,
+        pagination: {
+          current: number,
+          total: totalElements,
+          pageSize: size
+        }
+      }
     },
     async QueryDeviceData ({ commit }, parameter) {
       const { data } = await queryDeviceData(parameter)
@@ -65,22 +70,13 @@ const device = {
       const { data } = await queryDeviceDetail(parameter)
       commit('SET_DEVICE_DETAIL', data)
     },
-    async QueryDeviceType ({ commit }, data) {
-      const response = await queryDeviceType(data)
-      commit('SET_DEVICE_TYPE_LIST', response.data)
+    async QueryDeviceType ({ commit }, parameter) {
+      const { data } = await queryDeviceType(parameter)
+      commit('SET_DEVICE_TYPE_LIST', data)
     },
-    async QueryDeviceProtocol ({ commit }, data) {
-      const response = await queryDeviceProtocol(data)
-      commit('SET_DEVICE_PROTOCOL_LIST', response.data)
-    },
-    async AddDeviceCoAP ({ commit }, data) {
-      await addDeviceCoAP(data)
-    },
-    async AddDeviceMQTT ({ commit }, data) {
-      await addDeviceMQTT(data)
-    },
-    async AddDeviceHTTP ({ commit }, data) {
-      await addDeviceHTTP(data)
+    async QueryDeviceProtocol ({ commit }, parameter) {
+      const { data } = await queryDeviceProtocol(parameter)
+      commit('SET_DEVICE_PROTOCOL_LIST', data)
     }
   }
 }

@@ -1,68 +1,26 @@
 import { axios } from '@/utils/request'
 
 /**
- * 添加COAP设备
+ * 添加根据类型添加设备
  */
-export function addDeviceCoAP (data) {
+export function addDevice (data) {
+  const { deviceProtocol } = data
   return axios({
-    url: '/easyboot/device/addCoap',
+    url: `/easyboot/device/add${deviceProtocol}`,
     method: 'post',
     data
   })
 }
 
 /**
- * 添加MQTT设备
+ * 查询设备
  */
-export function addDeviceMQTT (data) {
+export function queryDevice (parameter) {
+  const { deviceProtocol } = parameter
   return axios({
-    url: '/easyboot/device/addMqtt',
-    method: 'post',
-    data
-  })
-}
-
-/**
- * 添加HTTP设备
- */
-export function addDeviceHTTP (data) {
-  return axios({
-    url: '/easyboot/device/addHttp',
-    method: 'post',
-    data
-  })
-}
-
-/**
- * 查询CoAP设备
- */
-export function queryDeviceCoAP (parameter) {
-  return axios({
-    url: 'easyboot/device/listCoap',
+    url: `easyboot/device/list${deviceProtocol}`,
     method: 'get',
-    parameter
-  })
-}
-
-/**
- * 查询MQTT设备
- */
-export function queryDeviceMQTT (parameter) {
-  return axios({
-    url: 'easyboot/device/listMqtt',
-    method: 'get',
-    parameter
-  })
-}
-
-/**
- * 查询HTTP设备
- */
-export function queryDeviceHTTP (parameter) {
-  return axios({
-    url: 'easyboot/device/listHttp',
-    method: 'get',
-    parameter
+    params: parameter
   })
 }
 
@@ -73,7 +31,7 @@ export function queryDeviceDetail (parameter) {
   return axios({
     url: 'easyboot/device/listHttp',
     method: 'get',
-    parameter
+    params: parameter
   })
 }
 
@@ -82,7 +40,7 @@ export function queryDeviceDetail (parameter) {
  */
 export function queryDeviceData () {
   return axios({
-    url: 'easyboot/device/listHttp',
+    url: 'easyboot/deviceData/list',
     method: 'get'
   })
 }

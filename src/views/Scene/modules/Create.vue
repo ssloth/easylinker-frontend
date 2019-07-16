@@ -17,7 +17,7 @@
         <a-form-item label="场景模板" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-select
             v-decorator="['preInstallTemplate',{
-              initialValue: preInstallTemplateList[0] && preInstallTemplateList[0].key
+              initialValue: preInstallTemplateList && preInstallTemplateList[0] && preInstallTemplateList[0].key
             }]"
             :disabled="preInstallTemplateDisabled"
           >

@@ -47,19 +47,17 @@ const device = {
       return response
     },
     async QueryDevice ({ commit }, parameter) {
+      const { deviceProtocol } = parameter
+      if (!deviceProtocol) return { data: [], pageNo: 0, totalCount: 0, pageSize: 0, totalPage: 0 }
       const {
-        data: { content },
-        size,
-        number,
-        totalElements
+        data: { content, size, number, totalElements, totalPages }
       } = await queryDevice(merge(defaultQuery, parameter))
       return {
         data: content,
-        pagination: {
-          current: number,
-          total: totalElements,
-          pageSize: size
-        }
+        pageNo: number,
+        totalCount: totalElements,
+        pageSize: size,
+        totalPage: totalPages
       }
     },
     async QueryDeviceData ({ commit }, parameter) {

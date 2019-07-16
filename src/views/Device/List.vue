@@ -19,7 +19,7 @@
             </a-form-item>
           </a-col>
           <a-col :md="8" :sm="24">
-            <a-form-item label="使用状态">
+            <a-form-item label="设备类型">
               <a-select v-model="queryParam.status" placeholder="请选择" default-value="0">
                 <a-select-option value="0">全部</a-select-option>
                 <a-select-option value="1">关闭</a-select-option>
@@ -77,20 +77,14 @@
     <s-table
       ref="table"
       size="default"
-      rowKey="key"
+      rowKey="id"
+      :scroll="{ x: 1366}"
       :columns="columns"
       :data="loadData"
       :rowSelection="options.rowSelection"
       showPagination="auto"
     >
-      <span slot="serial" slot-scope="text, record, index">{{ index + 1 }}</span>
-      <span slot="status" slot-scope="text">
-        <a-badge :status="text | statusTypeFilter" :text="text | statusFilter" />
-      </span>
-      <span slot="description" slot-scope="text">
-        <ellipsis :length="4" tooltip>{{ text }}</ellipsis>
-      </span>
-
+      <span class="serial-number" slot="serial" slot-scope="text">{{ text }}</span>
       <span slot="action" slot-scope="text, record">
         <template>
           <a @click="handleEdit(record)">配置</a>
@@ -109,7 +103,7 @@ import { STable, Ellipsis } from '@/components'
 import CreateModal from './modules/Create'
 import { getRoleList } from '@/api/manage'
 import { mapActions, mapGetters, mapState } from 'vuex'
-import * as columns from './columns'
+import * as deviceColumns from './columns'
 const statusMap = {
   0: {
     status: 'default',
@@ -192,12 +186,9 @@ export default {
     this.QuerySceneList()
     this.QueryDeviceProtocol().then(res => {
       const { deviceProtocolList } = this
-      this.queryParam = {
-        deviceProtocol: deviceProtocolList[0].key
-      }
-      this.loadData = parameter => {
-        return this.QueryDevice(Object.assign(parameter, this.queryParam))
-      }
+      const deviceProtocol = deviceProtocolList[0].key
+      this.handleTabChange(deviceProtocol)
+      this.$refs.table.refresh()
     })
     getRoleList({ t: new Date() })
   },
@@ -212,24 +203,7 @@ export default {
     ]),
     tableOption () {
       if (!this.optionAlertShow) {
-        this.options = {
-          alert: {
-            show: true,
-            clear: () => {
-              this.selectedRowKeys = []
-            }
-          },
-          rowSelection: {
-            selectedRowKeys: this.selectedRowKeys,
-            onChange: this.onSelectChange,
-            getCheckboxProps: record => ({
-              props: {
-                disabled: record.no === 'No 2', // Column configuration not to be checked
-                name: record.no
-              }
-            })
-          }
-        }
+        this.options = {}
         this.optionAlertShow = true
       } else {
         this.options = {
@@ -240,7 +214,6 @@ export default {
       }
     },
     handleEdit (record) {
-      console.log(record)
       this.$refs.modal.edit(record)
     },
     handleSub (record) {
@@ -254,8 +227,9 @@ export default {
       this.$refs.table.refresh()
     },
     handleTabChange (deviceProtocol) {
+      this.queryParam.deviceProtocol = deviceProtocol
       this.$refs.table.refresh()
-      this.columns = columns[`columns${deviceProtocol}`]
+      this.columns = deviceColumns[`columns${deviceProtocol}`]
     },
     onSelectChange (selectedRowKeys, selectedRows) {
       this.selectedRowKeys = selectedRowKeys

@@ -6,7 +6,7 @@
           <a-input v-decorator="['name', {rules: [{required: true, message: '请输入场景名称！'}]}]" />
         </a-form-item>
         <a-form-item label="场景类型" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-select v-decorator="['sceneType']" @change="handleSceneTypeListChange">
+          <a-select v-decorator="['sceneTypeList']" @change="handleSceneTypeListChange">
             <a-select-option
               v-for="item in sceneTypeList"
               :key="item.key"
@@ -16,7 +16,7 @@
         </a-form-item>
         <a-form-item label="场景模板" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-select
-            v-decorator="['preInstallTemplate',{
+            v-decorator="['preInstallTemplateList',{
               initialValue: preInstallTemplateList && preInstallTemplateList[0] && preInstallTemplateList[0].key
             }]"
             :disabled="preInstallTemplateDisabled"

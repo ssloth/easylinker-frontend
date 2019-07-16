@@ -10,8 +10,8 @@ const defaultQuery = {
 const scene = {
   state: {
     list: [],
-    preInstallTemplate: {},
-    sceneType: [],
+    preInstallTemplateList: {},
+    sceneTypeList: [],
     loading: {
       submitLoading: false
     }

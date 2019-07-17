@@ -1,9 +1,9 @@
 <template>
   <a-card type="card" :bordered="false">
     <div>
-      <a-tabs defaultActiveKey="0" @change="handleTabChange">
+      <a-tabs :activeKey="queryParam.deviceProtocol" @change="handleTabChange">
         <a-tab-pane
-          v-for="item in deviceProtocolList"
+          v-for="item in deviceProtocolMap"
           :tab="item.name | deviceProtocolFilter"
           :key="item.key"
         ></a-tab-pane>
@@ -15,32 +15,35 @@
         <a-row :gutter="48">
           <a-col :md="8" :sm="24">
             <a-form-item label="规则编号">
-              <a-input v-model="queryParam.id" placeholder />
+              <a-input v-model="queryParam.sceneSecurityId" placeholder />
             </a-form-item>
           </a-col>
           <a-col :md="8" :sm="24">
-            <a-form-item label="设备类型">
-              <a-select v-model="queryParam.status" placeholder="请选择" default-value="0">
-                <a-select-option value="0">全部</a-select-option>
-                <a-select-option value="1">关闭</a-select-option>
-                <a-select-option value="2">运行中</a-select-option>
-              </a-select>
+            <a-form-item label="设备名称">
+              <a-input v-model="queryParam.name" style="width: 100%" />
             </a-form-item>
           </a-col>
           <template v-if="advanced">
             <a-col :md="8" :sm="24">
-              <a-form-item label="调用次数">
-                <a-input-number v-model="queryParam.callNo" style="width: 100%" />
+              <a-form-item label="设备类型">
+                <a-select showSearch v-decorator="['deviceType']">
+                  <a-select-option
+                    v-for="item in deviceTypeMap"
+                    :key="item.key"
+                    :value="item.key"
+                  >{{ item.name }}</a-select-option>
+                </a-select>
+              </a-form-item>
+            </a-col>
+
+            <a-col :md="8" :sm="24">
+              <a-form-item label="设备描述">
+                <a-input-number v-model="queryParam.info" style="width: 100%" />
               </a-form-item>
             </a-col>
             <a-col :md="8" :sm="24">
-              <a-form-item label="更新日期">
-                <a-date-picker v-model="queryParam.date" style="width: 100%" placeholder="请输入更新日期" />
-              </a-form-item>
-            </a-col>
-            <a-col :md="8" :sm="24">
-              <a-form-item label="使用状态">
-                <a-select v-model="queryParam.useStatus" placeholder="请选择" default-value="0">
+              <a-form-item label="设备状态">
+                <a-select v-model="queryParam.deviceStatus" placeholder="请选择" default-value="0">
                   <a-select-option value="0">全部</a-select-option>
                   <a-select-option value="1">关闭</a-select-option>
                   <a-select-option value="2">运行中</a-select-option>
@@ -48,8 +51,8 @@
               </a-form-item>
             </a-col>
             <a-col :md="8" :sm="24">
-              <a-form-item label="使用状态">
-                <a-select placeholder="请选择" default-value="0">
+              <a-form-item label="所属场景">
+                <a-select v-model="queryParam.sceneSecurityId" placeholder="请选择" default-value="0">
                   <a-select-option value="0">全部</a-select-option>
                   <a-select-option value="1">关闭</a-select-option>
                   <a-select-option value="2">运行中</a-select-option>
@@ -78,12 +81,21 @@
       ref="table"
       size="default"
       rowKey="id"
-      :scroll="{ x: 1366}"
+      :scroll="{ x: scrollWidth}"
       :columns="columns"
       :data="loadData"
       :rowSelection="options.rowSelection"
       showPagination="auto"
     >
+      <span slot="name" slot-scope="text">
+        <ellipsis :length="20" tooltip>{{ text }}</ellipsis>
+      </span>
+      <span slot="info" slot-scope="text">
+        <ellipsis :length="20" tooltip>{{ text }}</ellipsis>
+      </span>
+      <span slot="deviceStatus" slot-scope="text">
+        <a-badge :status="text | statusTypeFilter" :text="text | statusFilter" />
+      </span>
       <span class="serial-number" slot="serial" slot-scope="text">{{ text }}</span>
       <span slot="action" slot-scope="text, record">
         <template>
@@ -104,6 +116,7 @@ import CreateModal from './modules/Create'
 import { getRoleList } from '@/api/manage'
 import { mapActions, mapGetters, mapState } from 'vuex'
 import * as deviceColumns from './columns'
+
 const statusMap = {
   0: {
     status: 'default',
@@ -120,6 +133,10 @@ const statusMap = {
   3: {
     status: 'error',
     text: '异常'
+  },
+  UNKNOW: {
+    status: 'error',
+    text: '未知'
   }
 }
 
@@ -136,6 +153,7 @@ export default {
       mdl: {},
       // 高级搜索 展开/关闭
       advanced: false,
+      currentProtocol: null,
       // 查询参数
       queryParam: {},
       // 表头
@@ -164,20 +182,27 @@ export default {
   computed: {
     ...mapState({
       list: state => state.device.list,
-      deviceTypeList: state => state.device.deviceTypeList,
-      deviceProtocolList: state => state.device.deviceProtocolList
+      deviceTypeMap: state => state.device.deviceTypeMap,
+      deviceProtocolMap: state => state.device.deviceProtocolMap
     }),
-    ...mapGetters(['sceneListSelect'])
+    ...mapGetters(['sceneListSelect']),
+    scrollWidth () {
+      return this.columns.reduce((acc, value) => {
+        if (typeof value.width === 'number') return acc + value.width
+        console.warn('Some columns have no width！')
+        return acc + 150
+      }, 0)
+    }
   },
   filters: {
     deviceProtocolFilter (name) {
       return name.replace('协议设备', '').replace('暂不选择协议', '')
     },
     statusFilter (type) {
-      return statusMap[type].text
+      return statusMap[type] ? statusMap[type].text : statusMap.UNKNOW.text
     },
     statusTypeFilter (type) {
-      return statusMap[type].status
+      return statusMap[type] ? statusMap[type].status : statusMap.UNKNOW.status
     }
   },
   created () {
@@ -185,8 +210,8 @@ export default {
     this.tableOption()
     this.QuerySceneList()
     this.QueryDeviceProtocol().then(res => {
-      const { deviceProtocolList } = this
-      const deviceProtocol = deviceProtocolList[0].key
+      const { deviceProtocolMap } = this
+      const deviceProtocol = deviceProtocolMap[0].key
       this.handleTabChange(deviceProtocol)
       this.$refs.table.refresh()
     })
@@ -223,13 +248,14 @@ export default {
         this.$message.error(`${record.no} 订阅失败，规则已关闭`)
       }
     },
-    handleOk () {
+    handleOk (values) {
+      const { deviceProtocol } = values
+      this.queryParam = { deviceProtocol }
       this.$refs.table.refresh()
     },
     handleTabChange (deviceProtocol) {
       this.queryParam.deviceProtocol = deviceProtocol
-      this.$refs.table.refresh()
-      this.columns = deviceColumns[`columns${deviceProtocol}`]
+      this.$refs.table.refresh().then(r => (this.columns = deviceColumns[`columns${deviceProtocol}`]))
     },
     onSelectChange (selectedRowKeys, selectedRows) {
       this.selectedRowKeys = selectedRowKeys

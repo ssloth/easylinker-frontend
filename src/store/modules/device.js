@@ -6,7 +6,8 @@ import {
   queryDeviceData,
   queryDeviceDetail,
   queryDeviceType,
-  queryDeviceProtocol
+  queryDeviceProtocol,
+  queryDeviceStatus
 } from '@/api/device'
 
 const defaultQuery = {
@@ -17,8 +18,8 @@ const defaultQuery = {
 const device = {
   state: {
     list: [],
-    deviceTypeList: [],
-    deviceProtocolList: [],
+    deviceTypeMap: [],
+    deviceProtocolMap: [],
     device: {
       detail: {},
       data: []
@@ -28,11 +29,11 @@ const device = {
     SET_DEVICE_LIST (state, list) {
       state.list = list
     },
-    SET_DEVICE_TYPE_LIST (state, deviceTypeList) {
-      state.deviceTypeList = deviceTypeList
+    SET_DEVICE_TYPE_MAP (state, deviceTypeMap) {
+      state.deviceTypeMap = deviceTypeMap
     },
-    SET_DEVICE_PROTOCOL_LIST (state, deviceProtocolList) {
-      state.deviceProtocolList = deviceProtocolList
+    SET_DEVICE_PROTOCOL_MAP (state, deviceProtocolMap) {
+      state.deviceProtocolMap = deviceProtocolMap
     },
     SET_DEVICE_DETAIL (state, detail) {
       state.device.detail = detail
@@ -70,11 +71,15 @@ const device = {
     },
     async QueryDeviceType ({ commit }, parameter) {
       const { data } = await queryDeviceType(parameter)
-      commit('SET_DEVICE_TYPE_LIST', data)
+      commit('SET_DEVICE_TYPE_MAP', data)
     },
     async QueryDeviceProtocol ({ commit }, parameter) {
       const { data } = await queryDeviceProtocol(parameter)
-      commit('SET_DEVICE_PROTOCOL_LIST', data)
+      commit('SET_DEVICE_PROTOCOL_MAP', data)
+    },
+    async QueryDeviceStatus ({ commit }) {
+      const { data } = await queryDeviceStatus()
+      commit('SET_DEVICE_STATUS_MAP', data)
     }
   }
 }

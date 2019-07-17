@@ -16,9 +16,8 @@ export function addDevice (data) {
  * 查询设备
  */
 export function queryDevice (parameter) {
-  const { deviceProtocol } = parameter
   return axios({
-    url: `easyboot/device/list${deviceProtocol}`,
+    url: `easyboot/device/list`,
     method: 'get',
     params: parameter
   })
@@ -61,6 +60,16 @@ export function queryDeviceProtocol () {
 export function queryDeviceType () {
   return axios({
     url: 'easyboot/device/listDeviceType',
+    method: 'get'
+  })
+}
+
+/**
+ * 查询设备支持状态
+ */
+export function queryDeviceStatus () {
+  return axios({
+    url: 'easyboot/device/listDeviceStatus',
     method: 'get'
   })
 }

@@ -1,12 +1,12 @@
 <template>
-  <a-modal title="新建设备" :visible="visible" :confirmLoading="confirmLoading" @cancel="handleCancel">
+  <a-modal title="新建设备" :visible="visible" :confirmLoading="confirmLoading" @cancel="handleCancel" @ok="handleSubmit">
     <a-form :form="form">
       <!-- step1 -->
       <div v-show="currentStep === 0">
         <a-form-item label="场景名" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-select
             showSearch
-            v-decorator="['sceneSecurityId', {rules: [{required: true, message: '请选择场景！'}]}]"
+            v-decorator="['sceneSecurityId']"
           >
             <a-select-option
               v-for="item in sceneListSelect"
@@ -23,7 +23,7 @@
           v-decorator="['deviceType', {rules: [{required: true, message: '请选择设备类型！'}]}]"
         >
           <a-select-option
-            v-for="item in deviceTypeList"
+            v-for="item in deviceTypeMap"
             :key="item.key"
             :value="item.key"
           >{{ item.name }}</a-select-option>
@@ -35,7 +35,7 @@
           v-decorator="['deviceProtocol',{rules: [{required: true, message: '请选择协议类型！'}]}]"
         >
           <a-select-option
-            v-for="item in deviceProtocolList"
+            v-for="item in deviceProtocolMap"
             :key="item.key"
             :value="item.key"
           >{{ item.name }}</a-select-option>
@@ -50,7 +50,7 @@
     </a-form>
     <template slot="footer">
       <a-button key="cancel" @click="handleCancel">取消</a-button>
-      <a-button key="forward" :loading="confirmLoading" type="primary" @click="submit">完成</a-button>
+      <a-button key="forward" :loading="confirmLoading" type="primary" @click="handleSubmit">完成</a-button>
     </template>
   </a-modal>
 </template>
@@ -76,8 +76,8 @@ export default {
   },
   computed: {
     ...mapState({
-      deviceTypeList: state => state.device.deviceTypeList,
-      deviceProtocolList: state => state.device.deviceProtocolList
+      deviceTypeMap: state => state.device.deviceTypeMap,
+      deviceProtocolMap: state => state.device.deviceProtocolMap
     }),
     ...mapGetters(['sceneListSelect'])
   },
@@ -94,11 +94,11 @@ export default {
     },
     handleNext () {
       if (this.currentStep === 2) {
-        this.submit()
+        this.handleSubmit()
       }
       this.currentStep += 1
     },
-    submit () {
+    handleSubmit () {
       const {
         AddDevice,
         form: { validateFields }
@@ -113,6 +113,7 @@ export default {
         } else {
           this.confirmLoading = false
         }
+        this.$emit('ok', values)
       })
     }
   }

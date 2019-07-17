@@ -52,7 +52,9 @@ export default {
   },
   methods: {
     ...mapActions(['QuerySceneList', 'QueryPreInstallTemplate', 'QuerySceneType']),
-    handleOk () {}
+    handleOk () {
+      this.QuerySceneList(defaultQuery)
+    }
   }
 }
 </script>

@@ -10,8 +10,8 @@ const defaultQuery = {
 const scene = {
   state: {
     list: [],
-    preInstallTemplateList: {},
-    sceneTypeList: [],
+    preInstallTemplateMap: {},
+    sceneTypeMap: [],
     loading: {
       submitLoading: false
     }
@@ -21,11 +21,11 @@ const scene = {
     SET_SENCE_LIST (state, sceneList) {
       state.list = sceneList
     },
-    SET_PER_INSTALL_TEMPLATE_LIST (state, preInstallTemplateList) {
-      state.preInstallTemplateList = preInstallTemplateList
+    SET_PER_INSTALL_TEMPLATE_MAP (state, preInstallTemplateMap) {
+      state.preInstallTemplateMap = preInstallTemplateMap
     },
-    SET_SENCE_TYPE_LIST (state, sceneTypeList) {
-      state.sceneTypeList = sceneTypeList
+    SET_SENCE_TYPE_MAP (state, sceneTypeMap) {
+      state.sceneTypeMap = sceneTypeMap
     },
     SET_SUBMIT_LOADING (state, loading) {
       state.loading.submitLoading = loading
@@ -41,11 +41,11 @@ const scene = {
     },
     async QueryPreInstallTemplate ({ commit }) {
       const { data } = await queryPreInstallTemplate()
-      commit('SET_PER_INSTALL_TEMPLATE_LIST', data)
+      commit('SET_PER_INSTALL_TEMPLATE_MAP', data)
     },
     async QuerySceneType ({ commit }) {
       const { data } = await querySceneType()
-      commit('SET_SENCE_TYPE_LIST', data)
+      commit('SET_SENCE_TYPE_MAP', data)
     },
     async AddScene ({ commit }, data) {
       commit('SET_SUBMIT_LOADING', true)

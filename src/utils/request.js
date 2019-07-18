@@ -52,7 +52,7 @@ service.interceptors.request.use(config => {
 service.interceptors.response.use(response => {
   const { data } = response
   const { code } = data
-  if (code === 501) {
+  if (code === 401) {
     notification.error({
       message: '登录过期',
       description: '登录过期！请重新登录！'

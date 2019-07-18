@@ -1,21 +1,21 @@
 <template>
-  <a-modal title="新建设备" :visible="visible" :confirmLoading="confirmLoading" @cancel="handleCancel" @ok="handleSubmit">
+  <a-modal
+    title="新建设备"
+    :visible="visible"
+    :confirmLoading="confirmLoading"
+    @cancel="handleCancel"
+    @ok="handleSubmit"
+  >
     <a-form :form="form">
-      <!-- step1 -->
-      <div v-show="currentStep === 0">
-        <a-form-item label="场景名" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-select
-            showSearch
-            v-decorator="['sceneSecurityId']"
-          >
-            <a-select-option
-              v-for="item in sceneListSelect"
-              :key="item.key"
-              :value="item.key"
-            >{{ item.name }}</a-select-option>
-          </a-select>
-        </a-form-item>
-      </div>
+      <a-form-item label="场景名" :labelCol="labelCol" :wrapperCol="wrapperCol">
+        <a-select showSearch v-decorator="['sceneSecurityId']">
+          <a-select-option
+            v-for="item in sceneSecurityIdMap"
+            :key="item.key"
+            :value="item.key"
+          >{{ item.name }}</a-select-option>
+        </a-select>
+      </a-form-item>
 
       <a-form-item label="设备类型" :labelCol="labelCol" :wrapperCol="wrapperCol">
         <a-select
@@ -70,7 +70,6 @@ export default {
       },
       confirmLoading: false,
       visible: false,
-      currentStep: 0,
       form: this.$form.createForm(this)
     }
   },
@@ -79,24 +78,15 @@ export default {
       deviceTypeMap: state => state.device.deviceTypeMap,
       deviceProtocolMap: state => state.device.deviceProtocolMap
     }),
-    ...mapGetters(['sceneListSelect'])
+    ...mapGetters(['sceneSecurityIdMap'])
   },
   methods: {
     ...mapActions(['AddDevice']),
     create () {
       this.visible = true
     },
-    handleBackward () {
-      this.currentStep -= 1
-    },
     handleCancel () {
       this.visible = false
-    },
-    handleNext () {
-      if (this.currentStep === 2) {
-        this.handleSubmit()
-      }
-      this.currentStep += 1
     },
     handleSubmit () {
       const {

@@ -1,5 +1,4 @@
 // import store from '@/store'
-import { merge } from 'lodash'
 import {
   addDevice,
   queryDevice,
@@ -10,16 +9,12 @@ import {
   queryDeviceStatus
 } from '@/api/device'
 
-const defaultQuery = {
-  page: 0,
-  size: 10
-}
-
 const device = {
   state: {
     list: [],
     deviceTypeMap: [],
     deviceProtocolMap: [],
+    deviceStatusMap: [],
     device: {
       detail: {},
       data: []
@@ -35,6 +30,9 @@ const device = {
     SET_DEVICE_PROTOCOL_MAP (state, deviceProtocolMap) {
       state.deviceProtocolMap = deviceProtocolMap
     },
+    SET_DEVICE_STATUS_MAP (state, deviceStatusMap) {
+      state.deviceStatusMap = deviceStatusMap
+    },
     SET_DEVICE_DETAIL (state, detail) {
       state.device.detail = detail
     },
@@ -47,15 +45,16 @@ const device = {
       const response = await addDevice(data)
       return response
     },
+    // NOTE: Pagination 是从1开始，后端是从0返回，咱也不敢让后端改接口，先每次查询都将page-1，将返回的页数手动加1
     async QueryDevice ({ commit }, parameter) {
-      const { deviceProtocol } = parameter
+      const { deviceProtocol, page } = parameter
       if (!deviceProtocol) return { data: [], pageNo: 0, totalCount: 0, pageSize: 0, totalPage: 0 }
       const {
         data: { content, size, number, totalElements, totalPages }
-      } = await queryDevice(merge(defaultQuery, parameter))
+      } = await queryDevice({ ...parameter, ...{ page: page - 1 } })
       return {
         data: content,
-        pageNo: number,
+        pageNo: number + 1,
         totalCount: totalElements,
         pageSize: size,
         totalPage: totalPages

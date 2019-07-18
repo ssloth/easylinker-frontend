@@ -25,7 +25,7 @@ export default {
     },
     pageNum: {
       type: Number,
-      default: 0
+      default: 1
     },
     pageSize: {
       type: Number,
@@ -134,6 +134,7 @@ export default {
      */
     async loadData (pagination, filters, sorter) {
       this.localLoading = true
+      console.log('=<>', pagination)
       const parameter = Object.assign({
         page: (pagination && pagination.current) ||
           this.showPagination && this.localPagination.current || this.pageNum,

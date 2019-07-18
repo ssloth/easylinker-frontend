@@ -26,11 +26,11 @@
           <template v-if="advanced">
             <a-col :md="8" :sm="24">
               <a-form-item label="设备类型">
-                <a-select showSearch v-decorator="['deviceType']">
+                <a-select v-model="queryParam.deviceType">
                   <a-select-option
                     v-for="item in deviceTypeMap"
                     :key="item.key"
-                    :value="item.key"
+                    :title="item.name"
                   >{{ item.name }}</a-select-option>
                 </a-select>
               </a-form-item>
@@ -44,18 +44,22 @@
             <a-col :md="8" :sm="24">
               <a-form-item label="设备状态">
                 <a-select v-model="queryParam.deviceStatus" placeholder="请选择" default-value="0">
-                  <a-select-option value="0">全部</a-select-option>
-                  <a-select-option value="1">关闭</a-select-option>
-                  <a-select-option value="2">运行中</a-select-option>
+                  <a-select-option
+                    v-for="item in deviceStatusMap"
+                    :key="item.key"
+                    :value="item.key"
+                  >{{ item.name }}</a-select-option>
                 </a-select>
               </a-form-item>
             </a-col>
             <a-col :md="8" :sm="24">
-              <a-form-item label="所属场景">
+              <a-form-item optionLabelProp="children" label="所属场景">
                 <a-select v-model="queryParam.sceneSecurityId" placeholder="请选择" default-value="0">
-                  <a-select-option value="0">全部</a-select-option>
-                  <a-select-option value="1">关闭</a-select-option>
-                  <a-select-option value="2">运行中</a-select-option>
+                  <a-select-option
+                    v-for="item in sceneSecurityIdMap"
+                    :key="item.key"
+                    :value="item.key"
+                  >{{ item.name }}</a-select-option>
                 </a-select>
               </a-form-item>
             </a-col>
@@ -66,7 +70,7 @@
               :style="advanced && { float: 'right', overflow: 'hidden' } || {} "
             >
               <a-button type="primary" @click="$refs.table.refresh(true)">查询</a-button>
-              <a-button style="margin-left: 8px" @click="() => queryParam = {}">重置</a-button>
+              <a-button style="margin-left: 8px" @click="resetSearchForm">重置</a-button>
               <a @click="toggleAdvanced" style="margin-left: 8px">
                 {{ advanced ? '收起' : '展开' }}
                 <a-icon :type="advanced ? 'up' : 'down'" />
@@ -87,16 +91,23 @@
       :rowSelection="options.rowSelection"
       showPagination="auto"
     >
+      <span class="serial-number" slot="serial" slot-scope="text">
+        <ellipsis :length="16" tooltip>{{ text }}</ellipsis>
+      </span>
       <span slot="name" slot-scope="text">
         <ellipsis :length="20" tooltip>{{ text }}</ellipsis>
       </span>
       <span slot="info" slot-scope="text">
         <ellipsis :length="20" tooltip>{{ text }}</ellipsis>
       </span>
+      <span slot="type" slot-scope="text">
+        {{ Array.isArray(deviceTypeMap)
+          && deviceTypeMap.find(item => item.key === text).name
+        }}
+      </span>
       <span slot="deviceStatus" slot-scope="text">
         <a-badge :status="text | statusTypeFilter" :text="text | statusFilter" />
       </span>
-      <span class="serial-number" slot="serial" slot-scope="text">{{ text }}</span>
       <span slot="action" slot-scope="text, record">
         <template>
           <a @click="handleEdit(record)">配置</a>
@@ -110,7 +121,6 @@
 </template>
 
 <script>
-import moment from 'moment'
 import { STable, Ellipsis } from '@/components'
 import CreateModal from './modules/Create'
 import { getRoleList } from '@/api/manage'
@@ -183,9 +193,10 @@ export default {
     ...mapState({
       list: state => state.device.list,
       deviceTypeMap: state => state.device.deviceTypeMap,
+      deviceStatusMap: state => state.device.deviceStatusMap,
       deviceProtocolMap: state => state.device.deviceProtocolMap
     }),
-    ...mapGetters(['sceneListSelect']),
+    ...mapGetters(['sceneSecurityIdMap']),
     scrollWidth () {
       return this.columns.reduce((acc, value) => {
         if (typeof value.width === 'number') return acc + value.width
@@ -209,11 +220,12 @@ export default {
     this.QueryDeviceType()
     this.tableOption()
     this.QuerySceneList()
+    this.QueryDeviceStatus()
     this.QueryDeviceProtocol().then(res => {
       const { deviceProtocolMap } = this
       const deviceProtocol = deviceProtocolMap[0].key
       this.handleTabChange(deviceProtocol)
-      this.$refs.table.refresh()
+      this.$refs.table.refresh(123)
     })
     getRoleList({ t: new Date() })
   },
@@ -224,7 +236,8 @@ export default {
       'QueryDeviceData',
       'QueryDeviceDetail',
       'QueryDeviceType',
-      'QueryDeviceProtocol'
+      'QueryDeviceProtocol',
+      'QueryDeviceStatus'
     ]),
     tableOption () {
       if (!this.optionAlertShow) {
@@ -265,9 +278,10 @@ export default {
       this.advanced = !this.advanced
     },
     resetSearchForm () {
-      this.queryParam = {
-        date: moment(new Date())
-      }
+      const {
+        queryParam: { deviceProtocol }
+      } = this
+      this.queryParam = { deviceProtocol }
     }
   }
 }

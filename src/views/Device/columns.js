@@ -10,13 +10,14 @@ const createColumns = (columns = []) => [
   {
     title: '设备名称',
     dataIndex: 'name',
-    width: 250,
+    width: 200,
     scopedSlots: { customRender: 'name' }
   },
   {
     title: '设备类型',
     dataIndex: 'deviceType',
-    width: 120
+    width: 120,
+    scopedSlots: { customRender: 'type' }
   },
   {
     title: '设备描述',

@@ -196,10 +196,10 @@ export default {
   },
   computed: {
     ...mapState({
-      list: state => state.device.list,
-      deviceTypeMap: state => state.device.deviceTypeMap,
-      deviceStatusMap: state => state.device.deviceStatusMap,
-      deviceProtocolMap: state => state.device.deviceProtocolMap
+      list: state => state.deviceList.list,
+      deviceTypeMap: state => state.deviceList.deviceTypeMap,
+      deviceStatusMap: state => state.deviceList.deviceStatusMap,
+      deviceProtocolMap: state => state.deviceList.deviceProtocolMap
     }),
     ...mapGetters(['sceneSecurityIdMap']),
     scrollWidth () {

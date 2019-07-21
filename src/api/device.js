@@ -13,6 +13,17 @@ export function addDevice (data) {
 }
 
 /**
+ * 更新设备
+ */
+export function updateDevice (data) {
+  return axios({
+    url: '/easyboot/device/update',
+    method: 'post',
+    data
+  })
+}
+
+/**
  * 查询设备
  */
 export function queryDevice (parameter) {

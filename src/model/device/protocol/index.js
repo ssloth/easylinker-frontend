@@ -1,10 +1,13 @@
+/**
+ * 设备列表
+ */
 import moment from 'moment'
 
 const createColumns = (columns = []) => [
   {
     title: '设备编号',
-    dataIndex: 'securityId',
-    width: 100,
+    dataIndex: 'sn',
+    width: 150,
     scopedSlots: { customRender: 'serial' }
   },
   {

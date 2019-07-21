@@ -1,24 +1,19 @@
 // import store from '@/store'
 import {
   addDevice,
+  updateDevice,
   queryDevice,
-  queryDeviceData,
-  queryDeviceDetail,
   queryDeviceType,
   queryDeviceProtocol,
   queryDeviceStatus
 } from '@/api/device'
 
-const device = {
+const deviceList = {
   state: {
     list: [],
     deviceTypeMap: [],
     deviceProtocolMap: [],
-    deviceStatusMap: [],
-    device: {
-      detail: {},
-      data: []
-    }
+    deviceStatusMap: []
   },
   mutations: {
     SET_DEVICE_LIST (state, list) {
@@ -32,17 +27,15 @@ const device = {
     },
     SET_DEVICE_STATUS_MAP (state, deviceStatusMap) {
       state.deviceStatusMap = deviceStatusMap
-    },
-    SET_DEVICE_DETAIL (state, detail) {
-      state.device.detail = detail
-    },
-    SET_DEVICE_DATA (state, data) {
-      state.device.data = data
     }
   },
   actions: {
     async AddDevice ({ commit }, data) {
       const response = await addDevice(data)
+      return response
+    },
+    async UpdateDevice ({ commit }, data) {
+      const response = await updateDevice(data)
       return response
     },
     // NOTE: Pagination 是从1开始，后端是从0返回，咱也不敢让后端改接口，先每次查询都将page-1，将返回的页数手动加1
@@ -60,14 +53,6 @@ const device = {
         totalPage: totalPages
       }
     },
-    async QueryDeviceData ({ commit }, parameter) {
-      const { data } = await queryDeviceData(parameter)
-      commit('SET_DEVICE_DATA', data)
-    },
-    async QueryDeviceDetail ({ commit }, parameter) {
-      const { data } = await queryDeviceDetail(parameter)
-      commit('SET_DEVICE_DETAIL', data)
-    },
     async QueryDeviceType ({ commit }, parameter) {
       const { data } = await queryDeviceType(parameter)
       commit('SET_DEVICE_TYPE_MAP', data)
@@ -83,4 +68,4 @@ const device = {
   }
 }
 
-export default device
+export default deviceList

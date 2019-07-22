@@ -1,7 +1,7 @@
 <template>
   <div class="main">
     <div class="header">
-      <h1 class="title">Easyliner</h1>
+      <!-- <h1 class="title">Easyliner</h1> -->
     </div>
     <a-form
       id="formLogin"
@@ -196,7 +196,7 @@ export default {
 .main {
   padding: 50px 50px 20px 50px;
   background: #ffffff;
-  border-radius: 5%;
+  border-radius: 2%;
 
   .header {
     text-align: center;

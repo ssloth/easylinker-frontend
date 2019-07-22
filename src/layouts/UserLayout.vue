@@ -51,9 +51,9 @@ export default {
     .container {
       width: 100%;
       min-height: 100%;
-      background: #f0f2f5 url(~@/assets/images/login-bg.jpeg) no-repeat;
+      background: #222222;
       background-size: 100%;
-      padding: 150px 0 144px;
+      padding: 250px 0 144px;
       position: relative;
 
       a {

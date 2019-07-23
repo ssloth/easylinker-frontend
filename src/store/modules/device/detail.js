@@ -1,16 +1,21 @@
+import { listQueryAdapter } from '@/utils/adapter'
+import { queryDeviceData } from '@/api/device'
+
 export default {
   state: {
-    currentType: null,
-    currentProtocol: null,
-    data: [],
-    
+    detail: {}
   },
   mutations: {
-    SET_CURRENT_TYPE (state, currentType) {
-      state.currentType = currentType
+    SET_DEVICE_DETAIL (state, detail) {
+      state.detail = detail
+    }
+  },
+  actions: {
+    SetDeviceDetail ({ commit }, detail) {
+      commit('SET_DEVICE_DETAIL', detail)
     },
-    SET_CURRENT_PROTOCOL (state, currentProtocol) {
-      state.currentProtocol = currentProtocol
+    async QueryDeviceDataList (_, parameter) {
+      listQueryAdapter(queryDeviceData)(parameter)
     }
   }
 }

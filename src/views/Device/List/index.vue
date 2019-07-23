@@ -92,7 +92,7 @@
         rowKey="id"
         :scroll="{ x: scrollWidth}"
         :columns="columns"
-        :data="loadData"
+        :data="deviceDataFn || defaultDataLoadFn"
         :rowSelection="options.rowSelection"
         showPagination="auto"
       >
@@ -130,6 +130,7 @@ import { PageView } from '@/layouts'
 import CreateModal from './modules/Create'
 import { getRoleList } from '@/api/manage'
 import { mapActions, mapGetters, mapState } from 'vuex'
+import { mixinDataLoadFn } from '@/utils/mixin'
 import * as deviceColumns from '@/model/device/protocol'
 
 const statusMap = {
@@ -163,6 +164,7 @@ export default {
     CreateModal,
     PageView
   },
+  mixins: [mixinDataLoadFn],
   data () {
     return {
       mdl: {},
@@ -175,10 +177,10 @@ export default {
       columns: [],
       selectedRowKeys: [],
       selectedRows: [],
-      loadData: parameter => {
-        return this.QueryDevice(Object.assign(parameter, this.queryParam))
-      },
       // custom table alert & rowSelection
+      defaultLoadData: async () => {
+        return { data: [], pageNo: 0, totalCount: 0, pageSize: 0, totalPage: 0 }
+      },
       options: {
         alert: {
           show: true,
@@ -196,7 +198,7 @@ export default {
   },
   computed: {
     ...mapState({
-      list: state => state.deviceList.list,
+      deviceDataFn: state => state.deviceList.deviceDataFn,
       deviceTypeMap: state => state.deviceList.deviceTypeMap,
       deviceStatusMap: state => state.deviceList.deviceStatusMap,
       deviceProtocolMap: state => state.deviceList.deviceProtocolMap
@@ -240,12 +242,13 @@ export default {
   methods: {
     ...mapActions([
       'QuerySceneList',
-      'QueryDevice',
+      'QueryDeviceList',
       'QueryDeviceData',
       'QueryDeviceDetail',
       'QueryDeviceType',
       'QueryDeviceProtocol',
-      'QueryDeviceStatus'
+      'QueryDeviceStatus',
+      'SetDeviceDetail'
     ]),
     tableOption () {
       if (!this.optionAlertShow) {
@@ -263,7 +266,8 @@ export default {
       this.$refs.createModal.edit(record)
     },
     handleDetail (record) {
-      this.$router.push(`/device/list/${record.securityId}`)
+      this.SetDeviceDetail(record)
+      this.$router.push(`/device/list/${record.deviceType.toLocaleUpperCase()}/${record.securityId}`)
     },
     handleOk (values) {
       const { deviceProtocol } = values

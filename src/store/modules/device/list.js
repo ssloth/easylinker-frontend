@@ -1,8 +1,11 @@
-// import store from '@/store'
+/**
+ * 设备管理/设备列表
+ */
+import { listQueryAdapter } from '@/utils/adapter'
 import {
   addDevice,
   updateDevice,
-  queryDevice,
+  queryDeviceList,
   queryDeviceType,
   queryDeviceProtocol,
   queryDeviceStatus
@@ -10,13 +13,13 @@ import {
 
 const deviceList = {
   state: {
-    list: [],
+    deviceDataFn: null,
     deviceTypeMap: [],
     deviceProtocolMap: [],
     deviceStatusMap: []
   },
   mutations: {
-    SET_DEVICE_LIST (state, list) {
+    SET_DEVICE_DATA_FN (state, list) {
       state.list = list
     },
     SET_DEVICE_TYPE_MAP (state, deviceTypeMap) {
@@ -38,21 +41,6 @@ const deviceList = {
       const response = await updateDevice(data)
       return response
     },
-    // NOTE: Pagination 是从1开始，后端是从0返回，咱也不敢让后端改接口，先每次查询都将page-1，将返回的页数手动加1
-    async QueryDevice ({ commit }, parameter) {
-      const { deviceProtocol, page } = parameter
-      if (!deviceProtocol) return { data: [], pageNo: 0, totalCount: 0, pageSize: 0, totalPage: 0 }
-      const {
-        data: { content, size, number, totalElements, totalPages }
-      } = await queryDevice({ ...parameter, ...{ page: page - 1 } })
-      return {
-        data: content,
-        pageNo: number + 1,
-        totalCount: totalElements,
-        pageSize: size,
-        totalPage: totalPages
-      }
-    },
     async QueryDeviceType ({ commit }, parameter) {
       const { data } = await queryDeviceType(parameter)
       commit('SET_DEVICE_TYPE_MAP', data)
@@ -64,6 +52,11 @@ const deviceList = {
     async QueryDeviceStatus ({ commit }) {
       const { data } = await queryDeviceStatus()
       commit('SET_DEVICE_STATUS_MAP', data)
+    },
+    async QueryDeviceDataFn ({ commit }, parameter) {
+      const { deviceProtocol } = parameter
+      if (!deviceProtocol) return { data: [], pageNo: 0, totalCount: 0, pageSize: 0, totalPage: 0 }
+      commit('SET_DEVICE_DATA_FN', listQueryAdapter(queryDeviceList)(parameter))
     }
   }
 }

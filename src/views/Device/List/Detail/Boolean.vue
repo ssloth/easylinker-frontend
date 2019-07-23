@@ -62,7 +62,7 @@
 </template>
 
 <script>
-import { mixinDevice } from '@/utils/mixin'
+import { mixinDevice, mixinDataLoadFn } from '@/utils/mixin'
 import { PageView } from '@/layouts'
 import DetailList from '@/components/tools/DetailList'
 
@@ -75,8 +75,8 @@ export default {
     DetailList,
     DetailListItem
   },
-  mixins: [mixinDevice],
-  data () {
+  mixins: [mixinDevice, mixinDataLoadFn],
+  data() {
     return {
       tabList: [
         {
@@ -206,14 +206,14 @@ export default {
     }
   },
   filters: {
-    statusFilter (status) {
+    statusFilter(status) {
       const statusMap = {
         agree: '成功',
         reject: '驳回'
       }
       return statusMap[status]
     },
-    statusTypeFilter (type) {
+    statusTypeFilter(type) {
       const statusTypeMap = {
         agree: 'success',
         reject: 'error'

@@ -7,7 +7,7 @@ import permission from './modules/permission'
 import getters from './getters'
 import scene from './modules/scene'
 import deviceList from './modules/device/list'
-
+import deviceDetail from './modules/device/detail'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -16,7 +16,8 @@ export default new Vuex.Store({
     user,
     permission,
     scene,
-    deviceList
+    deviceList,
+    deviceDetail
   },
   state: {},
   mutations: {},

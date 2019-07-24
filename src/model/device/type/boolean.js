@@ -1,6 +1,6 @@
 import moment from 'moment'
 
-export const columns = [
+export default [
   {
     title: '编号',
     dataIndex: 'id',

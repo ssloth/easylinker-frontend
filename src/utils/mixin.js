@@ -73,4 +73,13 @@ const AppDeviceEnquire = {
   }
 }
 
-export { mixin, AppDeviceEnquire, mixinDevice }
+const mixinMap = {
+  methods: {
+    getNameByKey (map, key) {
+      const result = map.find(item => item.key === key)
+      return result || '--'
+    }
+  }
+}
+
+export { mixin, AppDeviceEnquire, mixinDevice, mixinMap }

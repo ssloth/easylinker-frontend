@@ -16,6 +16,11 @@ const createColumns = (columns = []) => [
     scopedSlots: { customRender: 'name' }
   },
   {
+    title: '所属场景',
+    dataIndex: 'sceneSecurityId',
+    scopedSlots: { customRender: 'scene' }
+  },
+  {
     title: '设备类型',
     dataIndex: 'deviceType',
     scopedSlots: { customRender: 'type' }
@@ -23,7 +28,6 @@ const createColumns = (columns = []) => [
   {
     title: '设备描述',
     dataIndex: 'info'
-
   },
   ...columns,
   {

@@ -48,7 +48,7 @@ export function queryDeviceDetail (parameter) {
 /**
  * 查询设备数据
  */
-export function queryDeviceData (parameter) {
+export function queryDeviceDataList (parameter) {
   return axios({
     url: 'easyboot/deviceData/list',
     method: 'get',

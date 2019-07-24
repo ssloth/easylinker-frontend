@@ -5,7 +5,7 @@
     logo="https://gw.alipayobjects.com/zos/rmsportal/nxkuOJlFJuAUhzlMTCEe.png"
   >
     <detail-list slot="headerContent" size="small" :col="2" class="detail-layout">
-      <detail-list-item term="设备名">开关门</detail-list-item>
+      <detail-list-item term="设备名">{{ detail.name }}</detail-list-item>
       <detail-list-item term="所属场景">XX服务</detail-list-item>
       <detail-list-item term="创建时间">2018-08-07</detail-list-item>
       <detail-list-item term="设备类型">
@@ -37,41 +37,74 @@
       :activeTabKey="activeTabKey"
       @tabChange="(key) => {this.activeTabKey = key}"
     >
-      <a-table
+      <s-table
         v-if="activeTabKey === '1'"
-        :columns="operationColumns"
-        :dataSource="operation1"
+        :columns="deviceOperationColumns"
+        :dataSource="deviceOperationDataSource"
         :pagination="false"
       >
         <template slot="status" slot-scope="status">
           <a-badge :status="status | statusTypeFilter" :text="status | statusFilter" />
         </template>
-      </a-table>
-      <a-table
+      </s-table>
+      <s-table
         v-if="activeTabKey === '2'"
-        :columns="operationColumns"
-        :dataSource="operation2"
+        :columns="deviceUploadColumns"
+        :dataSource="deviceUploadDataSource"
         :pagination="false"
       >
         <template slot="status" slot-scope="status">
           <a-badge :status="status | statusTypeFilter" :text="status | statusFilter" />
         </template>
-      </a-table>
+      </s-table>
     </a-card>
   </page-view>
 </template>
 
 <script>
+import { mapActions, mapState } from 'vuex'
 import { mixinDevice } from '@/utils/mixin'
 import { PageView } from '@/layouts'
+import { STable } from '@/components'
 import DetailList from '@/components/tools/DetailList'
-
 const DetailListItem = DetailList.Item
 
 export default {
-  components: {},
+  name: 'Advanced',
+  components: {
+    PageView,
+    DetailList,
+    DetailListItem,
+    STable
+  },
+  mixins: [mixinDevice],
+  mounted () {
+    if (Object.keys(this.detail).length === 0) return this.$router.push('/device/list')
+  },
   data () {
-    return {}
+    return {
+      tabList: [
+        {
+          key: '1',
+          tab: '操作日志'
+        },
+        {
+          key: '2',
+          tab: '设备上报日志'
+        }
+      ],
+      activeTabKey: '1',
+      deviceOperationColumns: [],
+      deviceUploadColumns: [],
+      deviceOperationDataSource: parameter => this.QueryDeviceDataList(Object.assign(parameter, this.queryParam)),
+      deviceUploadDataSource: parameter => this.QueryDeviceList(Object.assign(parameter, this.queryParam))
+    }
+  },
+  computed: {
+    ...mapState({ detail: state => state.device.detail })
+  },
+  methods: {
+    ...mapActions(['QueryDeviceDataList', 'QueryDeviceList'])
   },
   filters: {
     statusFilter (status) {

@@ -8,19 +8,20 @@ import {
   queryDeviceList,
   queryDeviceType,
   queryDeviceProtocol,
-  queryDeviceStatus
+  queryDeviceStatus,
+  queryDeviceDataList
 } from '@/api/device'
 
-const deviceList = {
+const device = {
   state: {
-    deviceDataFn: null,
+    detail: {},
     deviceTypeMap: [],
     deviceProtocolMap: [],
     deviceStatusMap: []
   },
   mutations: {
-    SET_DEVICE_DATA_FN (state, list) {
-      state.list = list
+    SET_DEVICE_DETAIL (state, detail) {
+      state.detail = detail
     },
     SET_DEVICE_TYPE_MAP (state, deviceTypeMap) {
       state.deviceTypeMap = deviceTypeMap
@@ -41,6 +42,9 @@ const deviceList = {
       const response = await updateDevice(data)
       return response
     },
+    async SetDeviceDetail ({ commit }, data) {
+      commit('SET_DEVICE_DETAIL', data)
+    },
     async QueryDeviceType ({ commit }, parameter) {
       const { data } = await queryDeviceType(parameter)
       commit('SET_DEVICE_TYPE_MAP', data)
@@ -53,12 +57,19 @@ const deviceList = {
       const { data } = await queryDeviceStatus()
       commit('SET_DEVICE_STATUS_MAP', data)
     },
-    async QueryDeviceDataFn ({ commit }, parameter) {
+    async QueryDeviceList ({ commit }, parameter) {
       const { deviceProtocol } = parameter
       if (!deviceProtocol) return { data: [], pageNo: 0, totalCount: 0, pageSize: 0, totalPage: 0 }
-      commit('SET_DEVICE_DATA_FN', listQueryAdapter(queryDeviceList)(parameter))
+      const result = await listQueryAdapter(queryDeviceList)(parameter)
+      return result
+    },
+    async QueryDeviceDataList ({ commit }, parameter) {
+      const { deviceProtocol } = parameter
+      if (!deviceProtocol) return { data: [], pageNo: 0, totalCount: 0, pageSize: 0, totalPage: 0 }
+      const result = await listQueryAdapter(queryDeviceDataList)(parameter)
+      return result
     }
   }
 }
 
-export default deviceList
+export default device

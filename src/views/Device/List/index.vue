@@ -92,7 +92,7 @@
         rowKey="id"
         :scroll="{ x: scrollWidth}"
         :columns="columns"
-        :data="deviceDataFn || defaultDataLoadFn"
+        :data="loadData"
         :rowSelection="options.rowSelection"
         showPagination="auto"
       >
@@ -103,6 +103,10 @@
         <span slot="info" slot-scope="text">
           <ellipsis :length="20" tooltip>{{ text }}</ellipsis>
         </span>
+        <span slot="name" slot-scope="text">
+          <ellipsis :length="20" tooltip>{{ text }}</ellipsis>
+        </span>
+
         <span slot="type" slot-scope="text">
           {{ Array.isArray(deviceTypeMap)
             && deviceTypeMap.find(item => item.key === text).name
@@ -130,7 +134,6 @@ import { PageView } from '@/layouts'
 import CreateModal from './modules/Create'
 import { getRoleList } from '@/api/manage'
 import { mapActions, mapGetters, mapState } from 'vuex'
-import { mixinDataLoadFn } from '@/utils/mixin'
 import * as deviceColumns from '@/model/device/protocol'
 
 const statusMap = {
@@ -164,7 +167,6 @@ export default {
     CreateModal,
     PageView
   },
-  mixins: [mixinDataLoadFn],
   data () {
     return {
       mdl: {},
@@ -178,9 +180,7 @@ export default {
       selectedRowKeys: [],
       selectedRows: [],
       // custom table alert & rowSelection
-      defaultLoadData: async () => {
-        return { data: [], pageNo: 0, totalCount: 0, pageSize: 0, totalPage: 0 }
-      },
+      loadData: parameter => this.QueryDeviceList(Object.assign(parameter, this.queryParam)),
       options: {
         alert: {
           show: true,
@@ -198,10 +198,10 @@ export default {
   },
   computed: {
     ...mapState({
-      deviceDataFn: state => state.deviceList.deviceDataFn,
-      deviceTypeMap: state => state.deviceList.deviceTypeMap,
-      deviceStatusMap: state => state.deviceList.deviceStatusMap,
-      deviceProtocolMap: state => state.deviceList.deviceProtocolMap
+      deviceDataFn: state => state.device.deviceDataFn,
+      deviceTypeMap: state => state.device.deviceTypeMap,
+      deviceStatusMap: state => state.device.deviceStatusMap,
+      deviceProtocolMap: state => state.device.deviceProtocolMap
     }),
     ...mapGetters(['sceneSecurityIdMap']),
     scrollWidth () {
@@ -267,7 +267,7 @@ export default {
     },
     handleDetail (record) {
       this.SetDeviceDetail(record)
-      this.$router.push(`/device/list/${record.deviceType.toLocaleUpperCase()}/${record.securityId}`)
+      this.$router.push({ path: `/device/list/${record.securityId}`, params: record })
     },
     handleOk (values) {
       const { deviceProtocol } = values

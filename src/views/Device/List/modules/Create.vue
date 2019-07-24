@@ -70,8 +70,8 @@ export default {
   },
   computed: {
     ...mapState({
-      deviceTypeMap: state => state.deviceList.deviceTypeMap,
-      deviceProtocolMap: state => state.deviceList.deviceProtocolMap
+      deviceTypeMap: state => state.device.deviceTypeMap,
+      deviceProtocolMap: state => state.device.deviceProtocolMap
     }),
     ...mapGetters(['sceneSecurityIdMap'])
   },

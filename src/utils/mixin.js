@@ -73,7 +73,7 @@ const AppDeviceEnquire = {
   }
 }
 
-const mixinMap = {
+const mixinSelectMap = {
   methods: {
     getNameByKey (map, key) {
       const result = map.find(item => item.key === key)
@@ -82,4 +82,37 @@ const mixinMap = {
   }
 }
 
-export { mixin, AppDeviceEnquire, mixinDevice, mixinMap }
+const mixinMqtt = {
+  created () {
+    this.subscribe()
+  },
+  unmounted () {
+    this.unsubscribe()
+  },
+  computed: {
+    ...mapState({
+      detail: state => state.device.detail
+    })
+  },
+  methods: {
+    subscribe () {
+      if (this.detail.topic) {
+        this.$mqtt.subscribe(this.detail.topic)
+        this.$mqtt.on('message', (topic, message) => {
+          console.log(message)
+        })
+      }
+    },
+    unsubscribe () {
+      this.$mqtt.unsubscribe(this.detail.topic)
+      this.$mqtt.removeOutgoingMessage('message')
+    }
+  },
+  publish (data) {
+    if (this.detail.topic) {
+      this.$mqtt.publish(this.detail.topic)
+    }
+  }
+}
+
+export { mixin, AppDeviceEnquire, mixinDevice, mixinSelectMap, mixinMqtt }

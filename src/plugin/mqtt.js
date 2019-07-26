@@ -1,9 +1,20 @@
 import mqtt from 'mqtt'
 import config from '@/config/mqtt.config'
 
-const { baseUrl } = config
+const { brokerUrl } = config
 
-const client = mqtt.connect(baseUrl)
+// const client = {}
+
+const client = mqtt.connect(brokerUrl, config)
+
+client.on('connect', function () {
+  console.log('success connect!')
+  client.subscribe('presence', function (err) {
+    if (!err) {
+      client.publish('presence', 'Hello mqtt')
+    }
+  })
+})
 
 const vueMqtt = {
   vm: {},

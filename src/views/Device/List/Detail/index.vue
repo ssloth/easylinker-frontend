@@ -38,20 +38,22 @@
       @tabChange="(key) => {this.activeTabKey = key}"
     >
       <s-table
-        v-if="activeTabKey === '1'"
+        ref="operationTable"
+        v-show="activeTabKey === '1'"
         :columns="deviceOperationColumns"
-        :dataSource="deviceOperationDataSource"
-        :pagination="false"
+        :data="deviceOperateLogDataSource"
+        showPagination="auto"
       >
         <template slot="status" slot-scope="status">
           <a-badge :status="status | statusTypeFilter" :text="status | statusFilter" />
         </template>
       </s-table>
       <s-table
-        v-if="activeTabKey === '2'"
+        ref="operationEchoTable"
+        v-show="activeTabKey === '2'"
         :columns="deviceUploadColumns"
-        :dataSource="deviceUploadDataSource"
-        :pagination="false"
+        :data="deviceOperateEchoDataSource"
+        showPagination="auto"
       >
         <template slot="status" slot-scope="status">
           <a-badge :status="status | statusTypeFilter" :text="status | statusFilter" />
@@ -62,8 +64,8 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex'
-import { mixinDevice } from '@/utils/mixin'
+import { mapActions, mapState, mapGetters } from 'vuex'
+import { mixinDevice, mixinMqtt } from '@/utils/mixin'
 import { PageView } from '@/layouts'
 import { STable } from '@/components'
 import DetailList from '@/components/tools/DetailList'
@@ -77,12 +79,18 @@ export default {
     DetailListItem,
     STable
   },
-  mixins: [mixinDevice],
-  mounted () {
+  mixins: [mixinDevice, mixinMqtt],
+  mounted() {
     if (Object.keys(this.detail).length === 0) return this.$router.push('/device/list')
   },
-  data () {
+  watch: {
+    $router() {
+      this.tab
+    }
+  },
+  data() {
     return {
+      queryParam: {},
       tabList: [
         {
           key: '1',
@@ -94,27 +102,44 @@ export default {
         }
       ],
       activeTabKey: '1',
-      deviceOperationColumns: [],
-      deviceUploadColumns: [],
-      deviceOperationDataSource: parameter => this.QueryDeviceDataList(Object.assign(parameter, this.queryParam)),
-      deviceUploadDataSource: parameter => this.QueryDeviceList(Object.assign(parameter, this.queryParam))
+      deviceOperateLogDataSource: parameter =>
+        this.QueryDeviceOperateLogList(Object.assign(parameter, this.queryParam)),
+      deviceOperateEchoDataSource: parameter =>
+        this.QueryDeviceOperateEchoList(Object.assign(parameter, this.queryParam))
     }
   },
   computed: {
-    ...mapState({ detail: state => state.device.detail })
+    ...mapGetters(['deviceOperationLogColumns', 'deviceUploadLogColumns']),
+    ...mapState({
+      detail: state => state.device.detail,
+      deviceOperationColumns: state => state.device.operationColumns,
+      deviceUploadColumns: state => state.device.uploadColumns
+    })
   },
   methods: {
-    ...mapActions(['QueryDeviceDataList', 'QueryDeviceList'])
+    ...mapActions(['QueryDeviceOperateLogList', 'QueryDeviceOperateEchoList']),
+    refsTable() {
+      const { deviceSecurityId } = this.detail.deviceProtocol
+      this.queryParam.deviceSecurityId = deviceSecurityId
+      this.$refs.operationEchoTable.refresh()
+      this.$refs.operationTable.refresh()
+    },
+    resetTable() {
+      const { deviceSecurityId } = this.detail.deviceProtocol
+      this.queryParam = { deviceSecurityId }
+      this.$refs.operationEchoTable.refresh()
+      this.$refs.operationTable.refresh()
+    }
   },
   filters: {
-    statusFilter (status) {
+    statusFilter(status) {
       const statusMap = {
         agree: '成功',
         reject: '驳回'
       }
       return statusMap[status]
     },
-    statusTypeFilter (type) {
+    statusTypeFilter(type) {
       const statusTypeMap = {
         agree: 'success',
         reject: 'error'

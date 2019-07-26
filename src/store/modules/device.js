@@ -9,12 +9,16 @@ import {
   queryDeviceType,
   queryDeviceProtocol,
   queryDeviceStatus,
-  queryDeviceDataList
+  queryDeviceDataList,
+  queryDeviceOperateLogList,
+  queryDeviceOperateEchoList
 } from '@/api/device'
 
 const device = {
   state: {
     detail: {},
+    operationColumns: [],
+    uploadColumns: [],
     deviceTypeMap: [],
     deviceProtocolMap: [],
     deviceStatusMap: []
@@ -67,6 +71,18 @@ const device = {
       const { deviceProtocol } = parameter
       if (!deviceProtocol) return { data: [], pageNo: 0, totalCount: 0, pageSize: 0, totalPage: 0 }
       const result = await listQueryAdapter(queryDeviceDataList)(parameter)
+      return result
+    },
+    async QueryDeviceOperateLogList ({ commit }, parameter) {
+      const { deviceSecurityId } = parameter
+      if (!deviceSecurityId) return { data: [], pageNo: 0, totalCount: 0, pageSize: 0, totalPage: 0 }
+      const result = await listQueryAdapter(queryDeviceOperateLogList)(parameter)
+      return result
+    },
+    async QueryDeviceOperateEchoList ({ commit }, parameter) {
+      const { deviceSecurityId } = parameter
+      if (!deviceSecurityId) return { data: [], pageNo: 0, totalCount: 0, pageSize: 0, totalPage: 0 }
+      const result = await listQueryAdapter(queryDeviceOperateEchoList)(parameter)
       return result
     }
   }

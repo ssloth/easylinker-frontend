@@ -235,7 +235,7 @@ export default {
       const { deviceProtocolMap } = this
       const deviceProtocol = deviceProtocolMap[0].key
       this.handleTabChange(deviceProtocol)
-      this.$refs.table.refresh(123)
+      this.$refs.table.refresh()
     })
     getRoleList({ t: new Date() })
   },

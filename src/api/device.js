@@ -57,6 +57,28 @@ export function queryDeviceDataList (parameter) {
 }
 
 /**
+ * 查询设备操作日志
+ */
+export function queryDeviceOperateLogList (parameter) {
+  return axios({
+    url: 'easyboot/deviceOperate/listLog',
+    method: 'get',
+    params: parameter
+  })
+}
+
+/**
+ * 查询设备操作上传日志 /listEcho
+ */
+export function queryDeviceOperateEchoList (parameter) {
+  return axios({
+    url: 'easyboot/deviceOperate/listEcho',
+    method: 'get',
+    params: parameter
+  })
+}
+
+/**
  * 查询设备支持协议
  */
 export function queryDeviceProtocol () {

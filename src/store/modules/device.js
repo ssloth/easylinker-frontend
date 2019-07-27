@@ -10,8 +10,7 @@ import {
   queryDeviceProtocol,
   queryDeviceStatus,
   queryDeviceDataList,
-  queryDeviceOperateLogList,
-  queryDeviceOperateEchoList
+  queryDeviceOperateLogList
 } from '@/api/device'
 
 const device = {
@@ -77,12 +76,6 @@ const device = {
       const { deviceSecurityId } = parameter
       if (!deviceSecurityId) return { data: [], pageNo: 0, totalCount: 0, pageSize: 0, totalPage: 0 }
       const result = await listQueryAdapter(queryDeviceOperateLogList)(parameter)
-      return result
-    },
-    async QueryDeviceOperateEchoList ({ commit }, parameter) {
-      const { deviceSecurityId } = parameter
-      if (!deviceSecurityId) return { data: [], pageNo: 0, totalCount: 0, pageSize: 0, totalPage: 0 }
-      const result = await listQueryAdapter(queryDeviceOperateEchoList)(parameter)
       return result
     }
   }

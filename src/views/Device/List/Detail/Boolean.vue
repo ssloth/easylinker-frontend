@@ -1,23 +1,23 @@
 
 <template>
   <page-view
-    title="设备编号：234231029431"
+    :title="`设备编号：${detail.sn}`"
     logo="https://gw.alipayobjects.com/zos/rmsportal/nxkuOJlFJuAUhzlMTCEe.png"
   >
     <detail-list slot="headerContent" size="small" :col="2" class="detail-layout">
       <detail-list-item term="设备名">{{ detail.name }}</detail-list-item>
-      <detail-list-item term="所属场景">XX服务</detail-list-item>
-      <detail-list-item term="创建时间">2018-08-07</detail-list-item>
-      <detail-list-item term="设备类型">
-        <a>12421</a>
-      </detail-list-item>
-      <detail-list-item term="更新时间">2018-12-11</detail-list-item>
-      <detail-list-item term="备注">小区开关</detail-list-item>
+      <detail-list-item term="所属场景">{{getNameByKey(sceneSecurityIdMap, detail.sceneSecurityId)}}</detail-list-item>
+      <detail-list-item term="创建时间">{{detail.createTime | moment}}</detail-list-item>
+      <detail-list-item
+        term="设备类型"
+      >{{getNameByKey(deviceProtocolMap, detail.deviceProtocol)}} | {{getNameByKey(deviceTypeMap, detail.deviceType)}}</detail-list-item>
+      <detail-list-item term="更新时间">{{detail.updateTime | moment}}</detail-list-item>
+      <detail-list-item term="备注">{{detail.info}}</detail-list-item>
     </detail-list>
     <a-row slot="extra" class="status-list">
       <a-col :xs="12" :sm="12">
-        <div class="text">设备状态</div>
-        <div class="heading">开启</div>
+        <div class="text">连接状态</div>
+        <div class="heading">在线</div>
       </a-col>
       <a-col :xs="12" :sm="12">
         <div class="text">开关状态</div>
@@ -26,7 +26,10 @@
     </a-row>
     <!-- actions -->
     <template slot="action">
-      <a-button type="primary">打开开关</a-button>
+      <a-button-group>
+        <a-button type="primary" @click="handleOn">打开</a-button>
+        <a-button @click="handleOff">关闭</a-button>
+      </a-button-group>
     </template>
 
     <!-- 操作 -->
@@ -38,6 +41,7 @@
       @tabChange="(key) => {this.activeTabKey = key}"
     >
       <s-table
+        rowKey="id"
         ref="operationTable"
         v-show="activeTabKey === '1'"
         :columns="deviceOperationColumns"
@@ -49,10 +53,11 @@
         </template>
       </s-table>
       <s-table
+        rowKey="id"
         ref="operationEchoTable"
         v-show="activeTabKey === '2'"
         :columns="deviceUploadColumns"
-        :data="deviceOperateEchoDataSource"
+        :data="deviceDataDataSource"
         showPagination="auto"
       >
         <template slot="status" slot-scope="status">
@@ -65,7 +70,7 @@
 
 <script>
 import { mapActions, mapState, mapGetters } from 'vuex'
-import { mixinDevice, mixinMqtt } from '@/utils/mixin'
+import { mixinDevice, mixinMqtt, mixinSelectMap } from '@/utils/mixin'
 import { PageView } from '@/layouts'
 import { STable } from '@/components'
 import DetailList from '@/components/tools/DetailList'
@@ -79,17 +84,19 @@ export default {
     DetailListItem,
     STable
   },
-  mixins: [mixinDevice, mixinMqtt],
+  mixins: [mixinDevice, mixinMqtt, mixinSelectMap],
   mounted() {
     if (Object.keys(this.detail).length === 0) return this.$router.push('/device/list')
+    this.refreshTable()
   },
   watch: {
-    $router() {
-      this.tab
+    $route() {
+      this.refreshTable()
     }
   },
   data() {
     return {
+      switch: null,
       queryParam: {},
       tabList: [
         {
@@ -98,37 +105,46 @@ export default {
         },
         {
           key: '2',
-          tab: '设备上报日志'
+          tab: '设备数据'
         }
       ],
       activeTabKey: '1',
       deviceOperateLogDataSource: parameter =>
         this.QueryDeviceOperateLogList(Object.assign(parameter, this.queryParam)),
-      deviceOperateEchoDataSource: parameter =>
-        this.QueryDeviceOperateEchoList(Object.assign(parameter, this.queryParam))
+      deviceDataDataSource: parameter => this.QueryDeviceDataList(Object.assign(parameter, this.queryParam))
     }
   },
   computed: {
-    ...mapGetters(['deviceOperationLogColumns', 'deviceUploadLogColumns']),
+    ...mapGetters(['deviceOperationLogColumns', 'deviceUploadLogColumns', 'sceneSecurityIdMap']),
     ...mapState({
       detail: state => state.device.detail,
+      deviceTypeMap: state => state.device.deviceTypeMap,
+      deviceStatusMap: state => state.device.deviceStatusMap,
+      deviceProtocolMap: state => state.device.deviceProtocolMap,
       deviceOperationColumns: state => state.device.operationColumns,
       deviceUploadColumns: state => state.device.uploadColumns
     })
   },
   methods: {
-    ...mapActions(['QueryDeviceOperateLogList', 'QueryDeviceOperateEchoList']),
-    refsTable() {
-      const { deviceSecurityId } = this.detail.deviceProtocol
+    ...mapActions(['QueryDeviceOperateLogList', 'QueryDeviceDataList']),
+    refreshTable() {
+      console.log(this.detail)
+      const deviceSecurityId = this.detail.securityId
       this.queryParam.deviceSecurityId = deviceSecurityId
       this.$refs.operationEchoTable.refresh()
       this.$refs.operationTable.refresh()
     },
     resetTable() {
-      const { deviceSecurityId } = this.detail.deviceProtocol
+      const deviceSecurityId = this.detail.securityId
       this.queryParam = { deviceSecurityId }
       this.$refs.operationEchoTable.refresh()
       this.$refs.operationTable.refresh()
+    },
+    handleOn() {
+      this.publish(1)
+    },
+    handleOff() {
+      this.publish(0)
     }
   },
   filters: {

@@ -77,26 +77,31 @@ const mixinSelectMap = {
   methods: {
     getNameByKey (map, key) {
       const result = map.find(item => item.key === key)
-      return result || '--'
+      return result ? result.name : '--'
     }
   }
 }
 
 const mixinMqtt = {
   created () {
-    this.subscribe()
+    if (this.subscribe) this.subscribe()
   },
   unmounted () {
-    this.unsubscribe()
+    if (this.unsubscribe) this.unsubscribe()
   },
   computed: {
     ...mapState({
       detail: state => state.device.detail
-    })
+    }),
+    topic () {
+      const { deviceProtocol, securityId } = this.detail
+      if (deviceProtocol !== 'MQTT') return null
+      return `/device/${securityId}/`
+    }
   },
   methods: {
     subscribe () {
-      if (this.detail.topic) {
+      if (this.detail.deviceProtocol === 'MQTT') {
         this.$mqtt.subscribe(this.detail.topic)
         this.$mqtt.on('message', (topic, message) => {
           console.log(message)
@@ -106,11 +111,11 @@ const mixinMqtt = {
     unsubscribe () {
       this.$mqtt.unsubscribe(this.detail.topic)
       this.$mqtt.removeOutgoingMessage('message')
-    }
-  },
-  publish (data) {
-    if (this.detail.topic) {
-      this.$mqtt.publish(this.detail.topic)
+    },
+    publish (data) {
+      if (this.detail.deviceProtocol === 'MQTT') {
+        this.$mqtt.publish(`${this.topic}c2s`, data)
+      }
     }
   }
 }

@@ -4,19 +4,25 @@ export default [
   {
     title: '编号',
     dataIndex: 'id',
-    width: 50,
+    width: 150,
     scopedSlots: { customRender: 'id' }
   },
   {
     title: '操作内容',
     dataIndex: 'id',
-    width: 50,
+    width: 150,
+    scopedSlots: { customRender: 'id' }
+  },
+  {
+    title: '操作反馈',
+    dataIndex: 'id',
+    width: 150,
     scopedSlots: { customRender: 'id' }
   },
   {
     title: '备注',
     dataIndex: 'id',
-    width: 50,
+    width: 150,
     scopedSlots: { customRender: 'id' }
   },
   {

@@ -1,20 +1,19 @@
-import mqtt from 'mqtt'
-import config from '@/config/mqtt.config'
+import mqtt from 'paho-mqtt'
+import baseConfig from '@/config/mqtt.config'
+const { brokerUrl, port, clientId } = baseConfig
+const client = new mqtt.Client(brokerUrl, port, clientId)
 
-const { brokerUrl } = config
-
-// const client = {}
-
-const client = mqtt.connect(brokerUrl, config)
-
-client.on('connect', function () {
-  console.log('success connect!')
-  client.subscribe('presence', function (err) {
-    if (!err) {
-      client.publish('presence', 'Hello mqtt')
-    }
-  })
+client.connect({
+  onSuccess: () => {
+    console.log('=> mqtt connect success!')
+  }
 })
+
+client.onConnectionLost = responseObject => {
+  if (responseObject.errorCode !== 0) {
+    console.log('onConnectionLost:' + responseObject.errorMessage)
+  }
+}
 
 const vueMqtt = {
   vm: {},

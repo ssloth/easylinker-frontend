@@ -109,7 +109,7 @@
 
         <span slot="type" slot-scope="text">
           {{ Array.isArray(deviceTypeMap)
-          && deviceTypeMap.find(item => item.key === text).name
+            && deviceTypeMap.find(item => item.key === text).name
           }}
         </span>
         <span slot="deviceStatus" slot-scope="text">
@@ -167,7 +167,7 @@ export default {
     CreateModal,
     PageView
   },
-  data() {
+  data () {
     return {
       mdl: {},
       // 高级搜索 展开/关闭
@@ -204,7 +204,7 @@ export default {
       deviceProtocolMap: state => state.device.deviceProtocolMap
     }),
     ...mapGetters(['sceneSecurityIdMap']),
-    scrollWidth() {
+    scrollWidth () {
       return this.columns.reduce((acc, value) => {
         if (typeof value.width === 'number') return acc + value.width
         console.warn('Some columns have no width！')
@@ -213,20 +213,20 @@ export default {
     }
   },
   filters: {
-    serialFilter(text) {
+    serialFilter (text) {
       return text.replace('SN-', '')
     },
-    deviceProtocolFilter(name) {
+    deviceProtocolFilter (name) {
       return name.replace('协议设备', '').replace('暂不选择协议', '')
     },
-    statusFilter(type) {
+    statusFilter (type) {
       return statusMap[type] ? statusMap[type].text : statusMap.UNKNOW.text
     },
-    statusTypeFilter(type) {
+    statusTypeFilter (type) {
       return statusMap[type] ? statusMap[type].status : statusMap.UNKNOW.status
     }
   },
-  created() {
+  created () {
     this.QueryDeviceType()
     this.tableOption()
     this.QuerySceneList()
@@ -250,7 +250,7 @@ export default {
       'QueryDeviceStatus',
       'SetDeviceDetail'
     ]),
-    tableOption() {
+    tableOption () {
       if (!this.optionAlertShow) {
         this.options = {}
         this.optionAlertShow = true
@@ -262,30 +262,30 @@ export default {
         this.optionAlertShow = false
       }
     },
-    handleEdit(record) {
+    handleEdit (record) {
       this.$refs.createModal.edit(record)
     },
-    handleDetail(record) {
+    handleDetail (record) {
       this.SetDeviceDetail(record)
       this.$router.push(`/device/list/${record.deviceType.toLowerCase()}/${record.securityId}`)
     },
-    handleOk(values) {
+    handleOk (values) {
       const { deviceProtocol } = values
       this.queryParam = { deviceProtocol }
       this.$refs.table.refresh()
     },
-    handleTabChange(deviceProtocol) {
+    handleTabChange (deviceProtocol) {
       this.queryParam.deviceProtocol = deviceProtocol
       this.$refs.table.refresh().then(r => (this.columns = deviceColumns[`columns${deviceProtocol}`]))
     },
-    onSelectChange(selectedRowKeys, selectedRows) {
+    onSelectChange (selectedRowKeys, selectedRows) {
       this.selectedRowKeys = selectedRowKeys
       this.selectedRows = selectedRows
     },
-    toggleAdvanced() {
+    toggleAdvanced () {
       this.advanced = !this.advanced
     },
-    resetSearchForm() {
+    resetSearchForm () {
       const {
         queryParam: { deviceProtocol }
       } = this

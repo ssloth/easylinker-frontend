@@ -53,7 +53,7 @@
         </template>
       </s-table>
       <s-table
-        rowKey="securityId"
+        rowKey="id"
         ref="operationTable"
         v-show="activeTabKey === '2'"
         :columns="deviceOperationColumns"
@@ -126,10 +126,9 @@ export default {
     })
   },
   methods: {
-    ...mapActions(['QueryDeviceOperateLogList', 'QueryDeviceDataList', 'QueryDeviceTypeModel']),
+    ...mapActions(['QueryDeviceOperateLogList', 'QueryDeviceDataList']),
     refreshTable () {
       const deviceSecurityId = this.detail.securityId
-      this.QueryDeviceTypeModel(this.detail.deviceType.toLowerCase())
       this.queryParam.deviceSecurityId = deviceSecurityId
       this.$refs.operationEchoTable.refresh()
       this.$refs.operationTable.refresh()

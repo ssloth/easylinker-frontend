@@ -1,7 +1,8 @@
 /**
  * 设备管理/设备列表
  */
-import { listQueryAdapter } from '@/utils/adapter'
+import { listQueryAdapter, listQueryEchoAdapter } from '@/utils/adapter'
+import deviceTypeModel from '@/model/device/type/index'
 import {
   addDevice,
   updateDevice,
@@ -16,11 +17,11 @@ import {
 const device = {
   state: {
     detail: {},
-    operationColumns: [],
     uploadColumns: [],
     deviceTypeMap: [],
     deviceProtocolMap: [],
-    deviceStatusMap: []
+    deviceStatusMap: [],
+    operationColumns: []
   },
   mutations: {
     SET_DEVICE_DETAIL (state, detail) {
@@ -34,6 +35,9 @@ const device = {
     },
     SET_DEVICE_STATUS_MAP (state, deviceStatusMap) {
       state.deviceStatusMap = deviceStatusMap
+    },
+    SET_OPERATION_COLUMNS (state, operationColumns) {
+      state.operationColumns = operationColumns
     }
   },
   actions: {
@@ -60,6 +64,9 @@ const device = {
       const { data } = await queryDeviceStatus()
       commit('SET_DEVICE_STATUS_MAP', data)
     },
+    async QueryDeviceTypeModel ({ commit }, type) {
+      commit('SET_OPERATION_COLUMNS', deviceTypeModel[type] || [])
+    },
     async QueryDeviceList ({ commit }, parameter) {
       const { deviceProtocol } = parameter
       if (!deviceProtocol) return { data: [], pageNo: 0, totalCount: 0, pageSize: 0, totalPage: 0 }
@@ -75,7 +82,7 @@ const device = {
     async QueryDeviceOperateLogList ({ commit }, parameter) {
       const { deviceSecurityId } = parameter
       if (!deviceSecurityId) return { data: [], pageNo: 0, totalCount: 0, pageSize: 0, totalPage: 0 }
-      const result = await listQueryAdapter(queryDeviceOperateLogList)(parameter)
+      const result = await listQueryEchoAdapter(queryDeviceOperateLogList)(parameter)
       return result
     }
   }

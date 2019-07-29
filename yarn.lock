@@ -8247,6 +8247,16 @@ p-try@^2.0.0:
   resolved "https://registry.npmjs.org/p-try/-/p-try-2.2.0.tgz#cb2868540e313d61de58fafbe35ce9004d5540e6"
   integrity sha512-R4nPAVTAU0B9D35/Gk3uJf/7XYbQcyohSKdvAxIRSNghFl4e71hVoGnBNQz9cWaXxO2I10KTC+3jMdvvoKw6dQ==
 
+paho-mqtt@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.npm.taobao.org/paho-mqtt/download/paho-mqtt-1.1.0.tgz#8c10e29eb162e966fb15188d965c3dce505de9d9"
+  integrity sha1-jBDinrFi6Wb7FRiNllw9zlBd6dk=
+
+paho@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.npm.taobao.org/paho/download/paho-1.0.0.tgz#43caf1fef8fc6b313416a0e3095f640645e83ed1"
+  integrity sha1-Q8rx/vj8azE0FqDjCV9kBkXoPtE=
+
 pako@~1.0.5:
   version "1.0.10"
   resolved "https://registry.npmjs.org/pako/-/pako-1.0.10.tgz#4328badb5086a426aa90f541977d4955da5c9732"

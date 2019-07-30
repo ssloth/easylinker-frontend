@@ -1,7 +1,7 @@
 <template>
   <div class="main">
     <div class="header">
-      <!-- <h1 class="title">Easyliner</h1> -->
+      <img width="200" src="../../assets/images/logo.jpeg" alt="">
     </div>
     <a-form
       id="formLogin"
@@ -52,15 +52,13 @@
           </a-input>
           <img
             @click="handleCodeImage"
-            style="width: 40%"
+            style="display:block;width: 40%;height:100%;border:1px solid #efefef"
             :src="'/api/easyboot/captcha/jpg?uuid='+uuid"
-            alt
           />
         </a-form-item>
       </a-input-group>
 
       <a-form-item>
-        <a-checkbox v-decorator="['rememberMe']">自动登录</a-checkbox>
         <router-link
           :to="{ name: 'recover', params: { user: 'aaa'} }"
           class="forge-password"

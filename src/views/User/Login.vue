@@ -52,7 +52,7 @@
           </a-input>
           <img
             @click="handleCodeImage"
-            style="display:block;width: 40%;height:100%;border:1px solid #efefef"
+            style="width: 40%;height:100%;border:1px solid #efefef"
             :src="'/api/easyboot/captcha/jpg?uuid='+uuid"
           />
         </a-form-item>

@@ -123,7 +123,7 @@ const mixinMqtt = {
           stringData = JSON.stringify(data)
         } catch (error) {}
         const message = new Message(stringData)
-        this.$mqtt.destinationName = this.detail.topic + 's2c'
+        message.destinationName = this.detail.topic + 's2c'
         this.$mqtt.send(message)
       }
     }

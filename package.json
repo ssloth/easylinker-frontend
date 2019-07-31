@@ -26,6 +26,7 @@
     "moment": "^2.24.0",
     "mqtt": "^3.0.0",
     "nprogress": "^0.2.0",
+    "package": "^1.0.1",
     "paho": "^1.0.0",
     "paho-mqtt": "^1.1.0",
     "viser-vue": "^2.3.3",

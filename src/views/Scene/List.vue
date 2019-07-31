@@ -37,7 +37,7 @@ const defaultQuery = {
 
 export default {
   name: 'CardList',
-  data() {
+  data () {
     return {}
   },
   components: { CreateSceneModel, RandomImage },
@@ -46,14 +46,14 @@ export default {
       list: state => [null, ...state.scene.list]
     })
   },
-  created() {
+  created () {
     this.QuerySceneList(defaultQuery)
     this.QueryPreInstallTemplate()
     this.QuerySceneType()
   },
   methods: {
     ...mapActions(['QuerySceneList', 'QueryPreInstallTemplate', 'QuerySceneType']),
-    handleOk() {
+    handleOk () {
       this.QuerySceneList(defaultQuery)
     }
   }

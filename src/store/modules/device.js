@@ -1,28 +1,31 @@
-// import store from '@/store'
+/**
+ * 设备管理/设备列表
+ */
+import { listQueryAdapter, listQueryEchoAdapter } from '@/utils/adapter'
+import deviceTypeModel from '@/model/device/type/index'
 import {
   addDevice,
-  queryDevice,
-  queryDeviceData,
-  queryDeviceDetail,
+  updateDevice,
+  queryDeviceList,
   queryDeviceType,
   queryDeviceProtocol,
-  queryDeviceStatus
+  queryDeviceStatus,
+  queryDeviceDataList,
+  queryDeviceOperateLogList
 } from '@/api/device'
 
 const device = {
   state: {
-    list: [],
+    detail: {},
+    uploadColumns: [],
     deviceTypeMap: [],
     deviceProtocolMap: [],
     deviceStatusMap: [],
-    device: {
-      detail: {},
-      data: []
-    }
+    operationColumns: []
   },
   mutations: {
-    SET_DEVICE_LIST (state, list) {
-      state.list = list
+    SET_DEVICE_DETAIL (state, detail) {
+      state.detail = detail
     },
     SET_DEVICE_TYPE_MAP (state, deviceTypeMap) {
       state.deviceTypeMap = deviceTypeMap
@@ -33,11 +36,8 @@ const device = {
     SET_DEVICE_STATUS_MAP (state, deviceStatusMap) {
       state.deviceStatusMap = deviceStatusMap
     },
-    SET_DEVICE_DETAIL (state, detail) {
-      state.device.detail = detail
-    },
-    SET_DEVICE_DATA (state, data) {
-      state.device.data = data
+    SET_OPERATION_COLUMNS (state, operationColumns) {
+      state.operationColumns = operationColumns
     }
   },
   actions: {
@@ -45,27 +45,11 @@ const device = {
       const response = await addDevice(data)
       return response
     },
-    // NOTE: Pagination 是从1开始，后端是从0返回，咱也不敢让后端改接口，先每次查询都将page-1，将返回的页数手动加1
-    async QueryDevice ({ commit }, parameter) {
-      const { deviceProtocol, page } = parameter
-      if (!deviceProtocol) return { data: [], pageNo: 0, totalCount: 0, pageSize: 0, totalPage: 0 }
-      const {
-        data: { content, size, number, totalElements, totalPages }
-      } = await queryDevice({ ...parameter, ...{ page: page - 1 } })
-      return {
-        data: content,
-        pageNo: number + 1,
-        totalCount: totalElements,
-        pageSize: size,
-        totalPage: totalPages
-      }
+    async UpdateDevice ({ commit }, data) {
+      const response = await updateDevice(data)
+      return response
     },
-    async QueryDeviceData ({ commit }, parameter) {
-      const { data } = await queryDeviceData(parameter)
-      commit('SET_DEVICE_DATA', data)
-    },
-    async QueryDeviceDetail ({ commit }, parameter) {
-      const { data } = await queryDeviceDetail(parameter)
+    async SetDeviceDetail ({ commit }, data) {
       commit('SET_DEVICE_DETAIL', data)
     },
     async QueryDeviceType ({ commit }, parameter) {
@@ -79,6 +63,27 @@ const device = {
     async QueryDeviceStatus ({ commit }) {
       const { data } = await queryDeviceStatus()
       commit('SET_DEVICE_STATUS_MAP', data)
+    },
+    async QueryDeviceTypeModel ({ commit }, type) {
+      commit('SET_OPERATION_COLUMNS', deviceTypeModel[type] || [])
+    },
+    async QueryDeviceList ({ commit }, parameter) {
+      const { deviceProtocol } = parameter
+      if (!deviceProtocol) return { data: [], pageNo: 0, totalCount: 0, pageSize: 0, totalPage: 0 }
+      const result = await listQueryAdapter(queryDeviceList)(parameter)
+      return result
+    },
+    async QueryDeviceDataList ({ commit }, parameter) {
+      const { deviceProtocol } = parameter
+      if (!deviceProtocol) return { data: [], pageNo: 0, totalCount: 0, pageSize: 0, totalPage: 0 }
+      const result = await listQueryAdapter(queryDeviceDataList)(parameter)
+      return result
+    },
+    async QueryDeviceOperateLogList ({ commit }, parameter) {
+      const { deviceSecurityId } = parameter
+      if (!deviceSecurityId) return { data: [], pageNo: 0, totalCount: 0, pageSize: 0, totalPage: 0 }
+      const result = await listQueryEchoAdapter(queryDeviceOperateLogList)(parameter)
+      return result
     }
   }
 }

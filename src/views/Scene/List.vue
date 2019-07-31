@@ -1,6 +1,6 @@
 <template>
   <div class="card-list" ref="content">
-    <a-list :grid="{gutter: 24, lg: 4, md: 2, sm: 1, xs: 1}" :dataSource="list">
+    <a-list :grid="{gutter: 24, lg: 3, md: 2, sm: 1, xs: 1}" :dataSource="list">
       <a-list-item slot="renderItem" slot-scope="item">
         <template v-if="item === null">
           <a-button class="new-btn" type="dashed" @click="$refs.createSceneModal.create()">
@@ -10,6 +10,7 @@
         <template v-else>
           <a-card :hoverable="true">
             <a-card-meta>
+              <RandomImage slot="avatar" :value="item.name" :size="120"></RandomImage>
               <div style="margin-bottom: 3px" slot="title">{{ item.name }}</div>
               <div class="meta-content" slot="description">{{ item.info }}</div>
             </a-card-meta>
@@ -28,7 +29,7 @@
 <script>
 import { mapActions, mapState } from 'vuex'
 import CreateSceneModel from './modules/Create'
-
+import RandomImage from '@/components/RandomImage'
 const defaultQuery = {
   page: 0,
   size: 100
@@ -39,7 +40,7 @@ export default {
   data () {
     return {}
   },
-  components: { CreateSceneModel },
+  components: { CreateSceneModel, RandomImage },
   computed: {
     ...mapState({
       list: state => [null, ...state.scene.list]
@@ -60,6 +61,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
+
 .card-avatar {
   width: 48px;
   height: 48px;
@@ -95,7 +97,7 @@ export default {
   background-color: #fff;
   border-radius: 2px;
   width: 100%;
-  height: 188px;
+  height: 219px;
 }
 
 .meta-content {

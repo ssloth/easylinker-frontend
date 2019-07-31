@@ -28,16 +28,6 @@ export function getSmsCaptcha (parameter) {
   })
 }
 
-export function getInfo () {
-  return axios({
-    url: '/user/info',
-    method: 'get',
-    headers: {
-      'Content-Type': 'application/json;charset=UTF-8'
-    }
-  })
-}
-
 export function logout () {
   return axios({
     url: '/auth/logout',
@@ -57,5 +47,13 @@ export function get2step (parameter) {
     url: api.twoStepCode,
     method: 'post',
     data: parameter
+  })
+}
+
+export function queryUserDetail (parameter) {
+  return axios({
+    url: '/easyboot/user/detail',
+    method: 'get',
+    params: parameter
   })
 }

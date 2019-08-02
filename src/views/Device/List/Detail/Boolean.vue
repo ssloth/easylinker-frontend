@@ -129,7 +129,7 @@ export default {
     ...mapActions(['QueryDeviceOperateLogList', 'QueryDeviceDataList', 'QueryDeviceTypeModel']),
     refreshTable () {
       const deviceSecurityId = this.detail.securityId
-      this.QueryDeviceTypeModel(this.detail.deviceType.toLowerCase())
+      this.QueryDeviceTypeModel(this.detail.deviceType && this.detail.deviceType.toLowerCase())
       this.queryParam.deviceSecurityId = deviceSecurityId
       this.$refs.operationEchoTable.refresh()
       this.$refs.operationTable.refresh()

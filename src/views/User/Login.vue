@@ -1,7 +1,7 @@
 <template>
   <div class="main">
     <div class="header">
-      <img width="200" src="../../assets/images/logo.jpeg" alt="">
+      <img width="200" src="../../assets/images/logo.jpeg" alt />
     </div>
     <a-form
       id="formLogin"
@@ -90,11 +90,13 @@
 import TwoStepCaptcha from '@/components/tools/TwoStepCaptcha'
 import { mapActions } from 'vuex'
 import { timeFix } from '@/utils/util'
+import { mixinMqtt } from '@/utils/mixin'
 
 export default {
   components: {
     TwoStepCaptcha
   },
+  mixins: [mixinMqtt],
   data () {
     return {
       customActiveKey: 'tab1',

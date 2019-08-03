@@ -2,6 +2,7 @@
 import { deviceEnquire, DEVICE_TYPE } from '@/utils/device'
 import { mapState } from 'vuex'
 import { Message } from 'paho-mqtt'
+import { message } from 'ant-design-vue'
 
 // const mixinsComputed = Vue.config.optionMergeStrategies.computed
 // const mixinsMethods = Vue.config.optionMergeStrategies.methods
@@ -102,9 +103,12 @@ const mixinMqtt = {
   },
   methods: {
     subscribe () {
-      if (this.detail.deviceProtocol === 'MQTT' && this.$mqtt) {
-        console.log(this.$mqtt)
-        this.$mqtt.subscribe(this.detail.topic)
+      if (/* this.detail.deviceProtocol === 'MQTT' && */ this.$mqtt) {
+        if (!this.$mqtt.isConnected()) return message.error('mqtt 连接失败')
+        message.success('mqtt 连接成功')
+        this.$mqtt.subscribe(this.topic, {
+          qos: 2
+        })
         this.$mqtt.onMessageArrived = message => {
           console.log('onMessageArrived:' + message.payloadString)
         }
@@ -122,9 +126,15 @@ const mixinMqtt = {
         try {
           stringData = JSON.stringify(data)
         } catch (error) {}
-        const message = new Message(stringData)
-        message.destinationName = this.detail.topic + 's2c'
-        this.$mqtt.send(message)
+        try {
+          const msg = new Message(stringData)
+          msg.destinationName = this.topic + 's2c'
+          console.log('=>', this.topic + 's2c')
+          this.$mqtt.send(msg)
+          message.success('操作成功！')
+        } catch (error) {
+          message.error(error)
+        }
       }
     }
   }

@@ -74,8 +74,8 @@ const device = {
       return result
     },
     async QueryDeviceDataList ({ commit }, parameter) {
-      const { deviceProtocol } = parameter
-      if (!deviceProtocol) return { data: [], pageNo: 0, totalCount: 0, pageSize: 0, totalPage: 0 }
+      const { deviceSecurityId, deviceType } = parameter
+      if (!deviceSecurityId || !deviceType) return { data: [], pageNo: 0, totalCount: 0, pageSize: 0, totalPage: 0 }
       const result = await listQueryAdapter(queryDeviceDataList)(parameter)
       return result
     },

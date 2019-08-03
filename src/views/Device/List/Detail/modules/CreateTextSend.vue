@@ -1,41 +1,73 @@
 <template>
-  <a-modal :visible="visible" @cancel="handleCancel" @ok="handleSubmit">
+  <a-modal :width="650" :visible="visible" @cancel="handleCancel" @ok="handleSubmit">
     <div class="container">
       <a-tabs :activeKey="activeKey" @change="handleTabChange">
         <a-tab-pane tab="纯文本" :key="0">
-          <a-textarea placeholder="输入发送的文字" :rows="8" />
+          <a-textarea v-model="currentText" placeholder="输入发送的文字" :rows="15" />
         </a-tab-pane>
         <a-tab-pane tab="JSON" :key="1">
-          <a-form-item label="协议类型" :labelCol="labelCol">
-            <a-textarea placeholder="输入发送的JSON" :rows="8" />
+          <a-form-item validate-status="none">
+            <a-textarea v-model="currentJSON" placeholder="输入发送的JSON" :rows="15" />
           </a-form-item>
         </a-tab-pane>
-        <a-button class="format-button" slot="tabBarExtraContent" @click="handleFormat">格式化JSON</a-button>
+        <a-button
+          v-show="activeKey===1"
+          class="format-button"
+          slot="tabBarExtraContent"
+          @click="handleFormat"
+        >格式化JSON</a-button>
       </a-tabs>
     </div>
   </a-modal>
 </template>
 
 <script>
+import { message } from 'ant-design-vue'
 export default {
-  data() {
+  data () {
     return {
       activeKey: 0,
-      visible: false
+      visible: false,
+      currentText: '',
+      currentJSON: ''
     }
   },
   methods: {
-    create() {
+    create () {
       this.visible = true
     },
-    handleCancel() {
+    handleCancel () {
       this.visible = false
     },
-    handleSubmit() {},
-    handleTabChange(e) {
-      console.log(e)
+    handleSubmit () {
+      if (this.activeKey === 1) {
+        try {
+          const obj = JSON.parse(this.currentJSON)
+          if (typeof obj === 'object' && obj) {
+          } else {
+            message.warning('格式错误！')
+            return
+          }
+        } catch (error) {
+          message.warning('格式错误！')
+          return
+        }
+      }
+      const value = this.activeKey === 0 ? this.currentText : JSON.stringify(JSON.parse(this.currentJSON))
+      if (!value) return message.warning('数据为空！')
+      this.$emit('send', value)
+      this.handleCancel()
     },
-    handleFormat() {}
+    handleTabChange (e) {
+      this.activeKey = e
+    },
+    handleFormat () {
+      let ret = ''
+      try {
+        ret = JSON.stringify(JSON.parse(this.currentJSON), null, '\t')
+        this.currentJSON = ret
+      } catch (error) {}
+    }
   }
 }
 </script>

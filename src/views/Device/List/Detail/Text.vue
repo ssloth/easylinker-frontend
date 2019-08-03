@@ -35,7 +35,7 @@
         rowKey="id"
         ref="operationEchoTable"
         v-show="activeTabKey === '1'"
-        :columns="deviceUploadColumns"
+        :columns="deviceDataColumns"
         :data="deviceDataDataSource"
         showPagination="auto"
       >
@@ -56,7 +56,7 @@
         </template>
       </s-table>
     </a-card>
-    <create-text-send destroyOnClose ref="createTextSendModal" @ok="handleOk"></create-text-send>
+    <create-text-send destroyOnClose ref="createTextSendModal" @send="handleSend" @ok="handleOk"></create-text-send>
   </page-view>
 </template>
 
@@ -67,6 +67,7 @@ import { PageView } from '@/layouts'
 import { STable } from '@/components'
 import DetailList from '@/components/tools/DetailList'
 import CreateTextSend from './modules/CreateTextSend'
+import { message } from 'ant-design-vue'
 const DetailListItem = DetailList.Item
 
 export default {
@@ -109,7 +110,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['deviceOperationLogColumns', 'deviceUploadLogColumns', 'sceneSecurityIdMap']),
+    ...mapGetters(['deviceOperationLogColumns', 'deviceDataColumns', 'sceneSecurityIdMap']),
     ...mapState({
       detail: state => state.device.detail,
       deviceTypeMap: state => state.device.deviceTypeMap,
@@ -120,16 +121,15 @@ export default {
     })
   },
   methods: {
-    ...mapActions(['QueryDeviceOperateLogList', 'QueryDeviceDataList']),
+    ...mapActions(['QueryDeviceOperateLogList', 'QueryDeviceDataList', 'QueryDeviceTypeModel']),
     refreshTable () {
-      const deviceSecurityId = this.detail.securityId
-      this.queryParam.deviceSecurityId = deviceSecurityId
-      this.$refs.operationEchoTable.refresh()
-      this.$refs.operationTable.refresh()
+      const { deviceType } = this.detail
+      this.resetTable()
+      this.QueryDeviceTypeModel(deviceType)
     },
     resetTable () {
-      const deviceSecurityId = this.detail.securityId
-      this.queryParam = { deviceSecurityId }
+      const { securityId, deviceType } = this.detail
+      this.queryParam = { deviceSecurityId: securityId, deviceType: deviceType }
       this.$refs.operationEchoTable.refresh()
       this.$refs.operationTable.refresh()
     },
@@ -140,6 +140,9 @@ export default {
       this.publish(0)
     },
     handleOk () {},
+    handleSend (value) {
+      this.publish(value)
+    },
     handleSendModalShow () {}
   },
   filters: {

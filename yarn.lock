@@ -2909,7 +2909,7 @@ cli-width@^2.0.0:
   resolved "https://registry.npmjs.org/cli-width/-/cli-width-2.2.0.tgz#ff19ede8a9a5e579324147b0c11f0fbcbabed639"
   integrity sha1-/xnt6Kml5XkyQUewwR8PvLq+1jk=
 
-clipboard@^2.0.0:
+clipboard@^2.0.0, clipboard@^2.0.4:
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/clipboard/-/clipboard-2.0.4.tgz#836dafd66cf0fea5d71ce5d5b0bf6e958009112d"
   integrity sha512-Vw26VSLRpJfBofiVaFb/I8PVfdI1OxKcYShe6fm0sP/DtmiWQNCjhM/okTvdCo0G+lMMm1rMYbk4IK4x1X+kgQ==
@@ -11104,6 +11104,14 @@ vue-jest@^3.0.4:
     tsconfig "^7.0.0"
     vue-template-es2015-compiler "^1.6.0"
 
+vue-json-viewer@^2.2.1:
+  version "2.2.1"
+  resolved "https://registry.npm.taobao.org/vue-json-viewer/download/vue-json-viewer-2.2.1.tgz#8cf0a3e2bf96a82ced1e5e9ece5a58fdc9e0f207"
+  integrity sha1-jPCj4r+WqCztHl6ezlpY/cng8gc=
+  dependencies:
+    clipboard "^2.0.4"
+    vue "^2.6.9"
+
 vue-loader@^15.7.0:
   version "15.7.0"
   resolved "https://registry.npmjs.org/vue-loader/-/vue-loader-15.7.0.tgz#27275aa5a3ef4958c5379c006dd1436ad04b25b3"
@@ -11183,6 +11191,11 @@ vue@^2.5.17, vue@^2.5.22, vue@^2.5.3:
   version "2.6.7"
   resolved "https://registry.yarnpkg.com/vue/-/vue-2.6.7.tgz#254f188e7621d2d19ee28d0c0442c6d21b53ae2d"
   integrity sha512-g7ADfQ82QU+j6F/bVDioVQf2ccIMYLuR4E8ev+RsDBlmwRkhGO3HhgF4PF9vpwjdPpxyb1zzLur2nQ2oIMAMEg==
+
+vue@^2.6.9:
+  version "2.6.10"
+  resolved "https://registry.npm.taobao.org/vue/download/vue-2.6.10.tgz#a72b1a42a4d82a721ea438d1b6bf55e66195c637"
+  integrity sha1-pysaQqTYKnIepDjRtr9V5mGVxjc=
 
 vuex@^3.1.0:
   version "3.1.1"

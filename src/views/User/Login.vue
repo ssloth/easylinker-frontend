@@ -90,13 +90,11 @@
 import TwoStepCaptcha from '@/components/tools/TwoStepCaptcha'
 import { mapActions } from 'vuex'
 import { timeFix } from '@/utils/util'
-import { mixinMqtt } from '@/utils/mixin'
 
 export default {
   components: {
     TwoStepCaptcha
   },
-  mixins: [mixinMqtt],
   data () {
     return {
       customActiveKey: 'tab1',

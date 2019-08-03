@@ -1,14 +1,12 @@
 <template>
-  <a-modal :width="650" :visible="visible" @cancel="handleCancel" @ok="handleSubmit">
+  <a-modal destroyOnClose :width="650" :visible="visible" @cancel="handleCancel" @ok="handleSubmit">
     <div class="container">
       <a-tabs :activeKey="activeKey" @change="handleTabChange">
         <a-tab-pane tab="纯文本" :key="0">
           <a-textarea v-model="currentText" placeholder="输入发送的文字" :rows="15" />
         </a-tab-pane>
         <a-tab-pane tab="JSON" :key="1">
-          <a-form-item validate-status="none">
-            <a-textarea v-model="currentJSON" placeholder="输入发送的JSON" :rows="15" />
-          </a-form-item>
+          <a-textarea v-model="currentJSON" placeholder="输入发送的JSON" :rows="15" />
         </a-tab-pane>
         <a-button
           v-show="activeKey===1"
@@ -66,7 +64,9 @@ export default {
       try {
         ret = JSON.stringify(JSON.parse(this.currentJSON), null, '\t')
         this.currentJSON = ret
-      } catch (error) {}
+      } catch (error) {
+        message.warning('格式错误！')
+      }
     }
   }
 }

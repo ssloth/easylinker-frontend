@@ -123,9 +123,13 @@ const mixinMqtt = {
     publish (data) {
       if (this.detail.deviceProtocol === 'MQTT' && this.$mqtt && this.$mqtt.isConnected()) {
         let stringData = ''
-        try {
-          stringData = JSON.stringify(data)
-        } catch (error) {}
+        if (typeof data === 'object') {
+          try {
+            stringData = JSON.stringify(data)
+          } catch (error) {}
+        } else {
+          stringData = data
+        }
         try {
           const msg = new Message(stringData)
           msg.destinationName = this.topic + 's2c'

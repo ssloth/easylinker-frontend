@@ -142,6 +142,7 @@ export default {
     handleOk () {},
     handleSend (value) {
       this.publish(value)
+      message.success(value + ' 发送数据成功！')
     },
     handleSendModalShow () {}
   },

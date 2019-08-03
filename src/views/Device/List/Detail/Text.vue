@@ -15,21 +15,12 @@
       <detail-list-item term="备注">{{ detail.info }}</detail-list-item>
     </detail-list>
     <a-row slot="extra" class="status-list">
-      <a-col :xs="12" :sm="12">
-        <div class="text">连接状态</div>
-        <div class="heading">在线</div>
-      </a-col>
-      <a-col :xs="12" :sm="12">
-        <div class="text">开关状态</div>
-        <div class="heading">开启</div>
-      </a-col>
+      <div class="text">连接状态</div>
+      <div class="heading">在线</div>
     </a-row>
     <!-- actions -->
     <template slot="action">
-      <a-button-group>
-        <a-button type="primary" @click="handleOn">打开</a-button>
-        <a-button @click="handleOff">关闭</a-button>
-      </a-button-group>
+      <a-button @click="$refs.createTextSendModal.create()">发送文字</a-button>
     </template>
 
     <!-- 操作 -->
@@ -65,6 +56,7 @@
         </template>
       </s-table>
     </a-card>
+    <create-text-send destroyOnClose ref="createTextSendModal" @ok="handleOk"></create-text-send>
   </page-view>
 </template>
 
@@ -74,6 +66,7 @@ import { mixinDevice, mixinMqtt, mixinSelectMap } from '@/utils/mixin'
 import { PageView } from '@/layouts'
 import { STable } from '@/components'
 import DetailList from '@/components/tools/DetailList'
+import CreateTextSend from './modules/CreateTextSend'
 const DetailListItem = DetailList.Item
 
 export default {
@@ -82,7 +75,8 @@ export default {
     PageView,
     DetailList,
     DetailListItem,
-    STable
+    STable,
+    CreateTextSend
   },
   mixins: [mixinDevice, mixinMqtt, mixinSelectMap],
   mounted () {
@@ -144,7 +138,9 @@ export default {
     },
     handleOff () {
       this.publish(0)
-    }
+    },
+    handleOk () {},
+    handleSendModalShow () {}
   },
   filters: {
     statusFilter (status) {

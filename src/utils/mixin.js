@@ -1,6 +1,7 @@
 // import Vue from 'vue'
 import { deviceEnquire, DEVICE_TYPE } from '@/utils/device'
 import { mapState } from 'vuex'
+import { Message } from 'paho-mqtt'
 
 // const mixinsComputed = Vue.config.optionMergeStrategies.computed
 // const mixinsMethods = Vue.config.optionMergeStrategies.methods
@@ -73,4 +74,60 @@ const AppDeviceEnquire = {
   }
 }
 
-export { mixin, AppDeviceEnquire, mixinDevice }
+const mixinSelectMap = {
+  methods: {
+    getNameByKey (map, key) {
+      const result = map.find(item => item.key === key)
+      return result ? result.name : '--'
+    }
+  }
+}
+
+const mixinMqtt = {
+  created () {
+    if (this.subscribe) this.subscribe()
+  },
+  unmounted () {
+    if (this.unsubscribe) this.unsubscribe()
+  },
+  computed: {
+    ...mapState({
+      detail: state => state.device.detail
+    }),
+    topic () {
+      const { deviceProtocol, securityId } = this.detail
+      if (deviceProtocol !== 'MQTT') return null
+      return `/device/${securityId}/`
+    }
+  },
+  methods: {
+    subscribe () {
+      if (this.detail.deviceProtocol === 'MQTT' && this.$mqtt) {
+        console.log(this.$mqtt)
+        this.$mqtt.subscribe(this.detail.topic)
+        this.$mqtt.onMessageArrived = message => {
+          console.log('onMessageArrived:' + message.payloadString)
+        }
+      }
+    },
+    unsubscribe () {
+      if (this.detail.deviceProtocol === 'MQTT' && this.$mqtt) {
+        this.$mqtt.unsubscribe(this.detail.topic)
+        this.$mqtt.onMessageArrived = null
+      }
+    },
+    publish (data) {
+      if (this.detail.deviceProtocol === 'MQTT' && this.$mqtt && this.$mqtt.isConnected()) {
+        let stringData = ''
+        try {
+          stringData = JSON.stringify(data)
+        } catch (error) {}
+        const message = new Message(stringData)
+        this.$mqtt.destinationName = this.detail.topic + 's2c'
+        this.$mqtt.send(message)
+      }
+    }
+  }
+}
+
+export { mixin, AppDeviceEnquire, mixinDevice, mixinSelectMap, mixinMqtt }

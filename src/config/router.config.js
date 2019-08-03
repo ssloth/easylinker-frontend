@@ -12,16 +12,80 @@ export const asyncRouterMap = [
     children: [
       {
         path: '/home',
-        name: 'Home',
+        name: 'control',
         redirect: '/home',
         component: RouteView,
-        meta: { title: '首页', keepAlive: true, icon: bxAnaalyse },
+        meta: { title: '控制中心', keepAlive: true, icon: bxAnaalyse },
         children: [
           {
             path: '/home/index',
-            name: 'Index',
+            name: 'home',
             component: () => import('@/views/Home'),
             meta: { title: '欢迎', keepAlive: true }
+          }
+        ]
+      },
+      {
+        path: '/device',
+        name: 'device',
+        redirect: '/device/list',
+        component: RouteView,
+        meta: { title: '设备管理', keepAlive: true, icon: bxAnaalyse },
+        children: [
+          {
+            path: '/device/list',
+            name: 'deviceList',
+            component: () => import('@/views/Device/List/index'),
+            meta: { title: '设备列表', keepAlive: true }
+          },
+          {
+            path: '/device/list/boolean/:id',
+            name: 'detail',
+            hidden: true,
+            component: () => import('@/views/Device/List/Detail/Boolean'),
+            meta: { title: '设备详情', keepAlive: true }
+          }
+        ]
+      },
+      {
+        path: '/scene',
+        name: 'scene',
+        redirect: '/scene/list',
+        component: RouteView,
+        meta: { title: '场景管理', keepAlive: true, icon: bxAnaalyse },
+        children: [
+          {
+            path: '/scene/list',
+            name: 'sceneList',
+            component: () => import('@/views/Scene/List'),
+            meta: { title: '场景列表', keepAlive: true }
+          }
+          // {
+          //   path: '/scene/create',
+          //   name: 'sceneCreate',
+          //   component: () => import('@/views/Scene/Create'),
+          //   meta: { title: '创建场景', keepAlive: true }
+          // }
+        ]
+      },
+      {
+        path: '/system',
+        name: 'system',
+        redirect: '/system/user',
+        component: RouteView,
+        meta: { title: '系统管理', keepAlive: true, icon: bxAnaalyse },
+        children: [
+          {
+            path: 'user',
+            name: 'systemUser',
+            component: () => import('@/views/Home'),
+            meta: { title: '用户中心', keepAlive: true }
+          },
+          {
+            path: 'user',
+            name: 'systemSetting',
+            component: () => import('@/views/Home'),
+            meta: { title: '系统设置', keepAlive: true }
           }
         ]
       }
@@ -48,22 +112,22 @@ export const constantRouterMap = [
       {
         path: 'login',
         name: 'login',
-        component: () => import(/* webpackChunkName: "user" */ '@/views/user/Login')
+        component: () => import(/* webpackChunkName: "user" */ '@/views/User/Login')
       },
       {
         path: 'register',
         name: 'register',
-        component: () => import(/* webpackChunkName: "user" */ '@/views/user/Register')
+        component: () => import(/* webpackChunkName: "user" */ '@/views/User/Register')
       },
       {
         path: 'register-result',
         name: 'registerResult',
-        component: () => import(/* webpackChunkName: "user" */ '@/views/user/RegisterResult')
+        component: () => import(/* webpackChunkName: "user" */ '@/views/User/RegisterResult')
       }
     ]
   },
   {
     path: '/404',
-    component: () => import(/* webpackChunkName: "fail" */ '@/views/exception/404')
+    component: () => import(/* webpackChunkName: "fail" */ '@/views/Exception/404')
   }
 ]

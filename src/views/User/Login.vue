@@ -1,7 +1,7 @@
 <template>
   <div class="main">
     <div class="header">
-      <h1 class="title">Easyliner</h1>
+      <img width="200" src="../../assets/images/logo.jpeg" alt="">
     </div>
     <a-form
       id="formLogin"
@@ -50,12 +50,15 @@
           >
             <a-icon slot="prefix" type="code" :style="{ color: 'rgba(0,0,0,.25)' }" />
           </a-input>
-          <img style="width: 40%" :src="'/api/easyboot/captcha/jpg?uuid='+uuid" alt />
+          <img
+            @click="handleCodeImage"
+            style="width: 40%;height:100%;border:1px solid #efefef"
+            :src="'/api/easyboot/captcha/jpg?uuid='+uuid"
+          />
         </a-form-item>
       </a-input-group>
 
       <a-form-item>
-        <a-checkbox v-decorator="['rememberMe']">自动登录</a-checkbox>
         <router-link
           :to="{ name: 'recover', params: { user: 'aaa'} }"
           class="forge-password"
@@ -148,7 +151,6 @@ export default {
 
       validateFields(validateFieldsKey, { force: true }, (err, values) => {
         if (!err) {
-          console.log('login form', values)
           const loginParams = { ...values, uuid }
           Login(loginParams)
             .then(res => this.loginSuccess(res))
@@ -173,8 +175,7 @@ export default {
       })
     },
     loginSuccess (res) {
-      console.log(res)
-      this.$router.push({ name: 'Home' })
+      this.$router.push({ name: 'home' })
       // 延迟 1 秒显示欢迎信息
       setTimeout(() => {
         this.$notification.success({
@@ -198,7 +199,7 @@ export default {
 .main {
   padding: 50px 50px 20px 50px;
   background: #ffffff;
-  border-radius: 5%;
+  border-radius: 2%;
 
   .header {
     text-align: center;

@@ -1,3 +1,5 @@
+import deviceTypeModel from '@/model/device/type'
+
 const getters = {
   device: state => state.app.device,
   theme: state => state.app.theme,
@@ -6,10 +8,16 @@ const getters = {
   avatar: state => state.user.avatar,
   nickname: state => state.user.name,
   welcome: state => state.user.welcome,
-  roles: state => state.user.roles,
+  roles: state => state.user.roles || [],
   userInfo: state => state.user.info,
   addRouters: state => state.permission.addRouters,
-  multiTab: state => state.app.multiTab
+  multiTab: state => state.app.multiTab,
+
+  sceneSecurityIdMap: state => state.scene.list.map(item => ({ name: item.name, key: item.securityId })),
+  deviceOperationLogColumns: state =>
+    deviceTypeModel[state.device.detail.deviceType && state.device.detail.deviceType.toLowerCase()],
+  deviceUploadLogColumns: state =>
+    deviceTypeModel[state.device.detail.deviceType && state.device.detail.deviceType.toLowerCase()]
 }
 
 export default getters

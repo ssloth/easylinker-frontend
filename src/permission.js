@@ -18,15 +18,15 @@ router.beforeEach((to, from, next) => {
   if (Vue.ls.get(ACCESS_TOKEN)) {
     /* has token */
     if (to.path === '/user/login') {
-      next({ path: '/dashboard/workplace' })
+      next({ path: '/home/index' })
       NProgress.done()
     } else {
       if (store.getters.roles.length === 0) {
         store
-          .dispatch('GetInfo')
+          .dispatch('QueryUserDetail')
           .then(res => {
-            const roles = res.result && res.result.role
-            store.dispatch('GenerateRoutes', { roles }).then(() => {
+            // const roles = (res.data && res.data.roles) || []
+            store.dispatch('GenerateRoutes').then(() => {
               // 根据roles权限生成可访问的路由表
               // 动态添加可访问路由表
               router.addRoutes(store.getters.addRouters)
@@ -40,7 +40,7 @@ router.beforeEach((to, from, next) => {
               }
             })
           })
-          .catch(() => {
+          .catch(e => {
             notification.error({
               message: '错误',
               description: '请求用户信息失败，请重试'

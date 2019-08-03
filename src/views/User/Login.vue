@@ -95,7 +95,7 @@ export default {
   components: {
     TwoStepCaptcha
   },
-  data () {
+  data() {
     return {
       customActiveKey: 'tab1',
       loginBtn: false,
@@ -112,13 +112,13 @@ export default {
       }
     }
   },
-  created () {
+  created() {
     this.handleCodeImage()
   },
   methods: {
     ...mapActions(['Login', 'Logout']),
     // handler
-    handleUsernameOrEmail (rule, value, callback) {
+    handleUsernameOrEmail(rule, value, callback) {
       const { state } = this
       const regex = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/
       if (regex.test(value)) {
@@ -128,16 +128,16 @@ export default {
       }
       callback()
     },
-    handleTabClick (key) {
+    handleTabClick(key) {
       this.customActiveKey = key
       // this.form.resetFields()
     },
-    handleCodeImage () {
+    handleCodeImage() {
       this.uuid = Math.random()
         .toString()
         .slice(2, 8)
     },
-    handleSubmit (e) {
+    handleSubmit(e) {
       e.preventDefault()
       const {
         form: { validateFields },
@@ -165,16 +165,16 @@ export default {
         }
       })
     },
-    stepCaptchaSuccess () {
+    stepCaptchaSuccess() {
       this.loginSuccess()
     },
-    stepCaptchaCancel () {
+    stepCaptchaCancel() {
       this.Logout().then(() => {
         this.loginBtn = false
         this.stepCaptchaVisible = false
       })
     },
-    loginSuccess (res) {
+    loginSuccess(res) {
       this.$router.push({ name: 'home' })
       // 延迟 1 秒显示欢迎信息
       setTimeout(() => {
@@ -184,7 +184,7 @@ export default {
         })
       }, 1000)
     },
-    requestFailed (err) {
+    requestFailed(err) {
       this.$notification['error']({
         message: '错误',
         description: ((err.response || {}).data || {}).message || '请求出现错误，请稍后再试',
@@ -200,6 +200,12 @@ export default {
   padding: 50px 50px 20px 50px;
   background: #ffffff;
   border-radius: 2%;
+
+  &:hover {
+    transition: all 0.5s;
+    transform: scale(1.05);
+    box-shadow: 0 0 10px #b5cfff, 0 0 25px #FFFFFF, 0 0 100px rgba(255, 255, 255, 0.5);
+  }
 
   .header {
     text-align: center;

@@ -26,7 +26,7 @@
                 <a-icon type="info-circle-o" />
               </a-tooltip>
               <div>
-                 <span flag="up" style="margin-right: 16px;">
+                <span flag="up" style="margin-right: 16px;">
                   <span slot="term">在线</span>
                   12
                 </span>
@@ -43,7 +43,7 @@
                 <a-icon type="info-circle-o" />
               </a-tooltip>
               <div>
-                 <span flag="up" style="margin-right: 16px;">
+                <span flag="up" style="margin-right: 16px;">
                   <span slot="term">在线</span>
                   12
                 </span>
@@ -220,7 +220,6 @@ import {
   MiniArea,
   MiniBar,
   MiniProgress,
-  RankList,
   Bar,
   Trend,
   NumberInfo,
@@ -347,7 +346,7 @@ export default {
     NumberInfo,
     MiniSmoothArea
   },
-  data() {
+  data () {
     return {
       loading: true,
       rankList,
@@ -371,7 +370,7 @@ export default {
       }
     }
   },
-  created() {
+  created () {
     setTimeout(() => {
       this.loading = !this.loading
     }, 1000)

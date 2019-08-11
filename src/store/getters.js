@@ -16,7 +16,7 @@ const getters = {
   sceneSecurityIdMap: state => state.scene.list.map(item => ({ name: item.name, key: item.securityId })),
   deviceOperationLogColumns: state =>
     deviceTypeModel[state.device.detail.deviceType && state.device.detail.deviceType.toLowerCase()],
-  deviceUploadLogColumns: state =>
+  deviceDataColumns: state =>
     deviceTypeModel[state.device.detail.deviceType && state.device.detail.deviceType.toLowerCase()]
 }
 

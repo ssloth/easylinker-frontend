@@ -1,7 +1,7 @@
 <template>
   <div class="main">
     <div class="header">
-      <img width="200" src="../../assets/images/logo.jpeg" alt="">
+      <img width="200" src="../../assets/images/logo.jpeg" alt />
     </div>
     <a-form
       id="formLogin"

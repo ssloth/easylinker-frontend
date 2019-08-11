@@ -10,7 +10,7 @@
         <template v-else>
           <a-card :hoverable="true">
             <a-card-meta>
-              <RandomImage slot="avatar" :value="item.name" :size="120"></RandomImage>
+              <RandomImage slot="avatar" :value="item.securityId" :size="120" />
               <div style="margin-bottom: 3px" slot="title">{{ item.name }}</div>
               <div class="meta-content" slot="description">{{ item.info }}</div>
             </a-card-meta>
@@ -61,7 +61,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-
 .card-avatar {
   width: 48px;
   height: 48px;

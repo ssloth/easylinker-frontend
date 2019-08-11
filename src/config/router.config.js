@@ -43,7 +43,14 @@ export const asyncRouterMap = [
             name: 'detail',
             hidden: true,
             component: () => import('@/views/Device/List/Detail/Boolean'),
-            meta: { title: '设备详情', keepAlive: true }
+            meta: { title: '布尔设备-详情', keepAlive: true }
+          },
+          {
+            path: '/device/list/text/:id',
+            name: 'detail',
+            hidden: true,
+            component: () => import('@/views/Device/List/Detail/Text'),
+            meta: { title: '文本设备-详情', keepAlive: true }
           }
         ]
       },

@@ -128,15 +128,13 @@ export default {
   methods: {
     ...mapActions(['QueryDeviceOperateLogList', 'QueryDeviceDataList', 'QueryDeviceTypeModel']),
     refreshTable () {
-      const deviceSecurityId = this.detail.securityId
-      this.QueryDeviceTypeModel(this.detail.deviceType.toLowerCase())
-      this.queryParam.deviceSecurityId = deviceSecurityId
-      this.$refs.operationEchoTable.refresh()
-      this.$refs.operationTable.refresh()
+      const { deviceType } = this.detail
+      this.resetTable()
+      this.QueryDeviceTypeModel(deviceType.toLowerCase())
     },
     resetTable () {
-      const deviceSecurityId = this.detail.securityId
-      this.queryParam = { deviceSecurityId }
+      const { securityId, deviceType } = this.detail
+      this.queryParam = { deviceSecurityId: securityId, deviceType: deviceType.toLowerCase() }
       this.$refs.operationEchoTable.refresh()
       this.$refs.operationTable.refresh()
     },

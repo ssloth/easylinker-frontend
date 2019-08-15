@@ -20,7 +20,7 @@
     </a-row>
     <!-- actions -->
     <template slot="action">
-      <a-button @click="$refs.createTextSendModal.create()">发送文字</a-button>
+      <a-button type="primary" @click="$refs.createTextSendModal.create()">发送文字</a-button>
     </template>
 
     <!-- 操作 -->
@@ -121,15 +121,10 @@ export default {
     })
   },
   methods: {
-    ...mapActions(['QueryDeviceOperateLogList', 'QueryDeviceDataList', 'QueryDeviceTypeModel']),
-    refreshTable () {
-      const { deviceType } = this.detail
-      this.resetTable()
-      this.QueryDeviceTypeModel(deviceType)
-    },
+    ...mapActions(['QueryDeviceOperateLogList', 'QueryDeviceDataList']),
     resetTable () {
       const { securityId, deviceType } = this.detail
-      this.queryParam = { deviceSecurityId: securityId, deviceType: deviceType }
+      this.queryParam = { deviceSecurityId: securityId, deviceType }
       this.$refs.operationEchoTable.refresh()
       this.$refs.operationTable.refresh()
     },

@@ -44,7 +44,7 @@
         rowKey="id"
         ref="operationEchoTable"
         v-show="activeTabKey === '1'"
-        :columns="deviceUploadColumns"
+        :columns="dataColumn"
         :data="deviceDataDataSource"
         showPagination="auto"
       >
@@ -56,7 +56,7 @@
         rowKey="securityId"
         ref="operationTable"
         v-show="activeTabKey === '2'"
-        :columns="deviceOperationColumns"
+        :columns="operateColumn"
         :data="deviceOperateLogDataSource"
         showPagination="auto"
       >
@@ -69,6 +69,7 @@
 </template>
 
 <script>
+import { dataColumn, operateColumn } from '@/model/device/detail'
 import { mapActions, mapState, mapGetters } from 'vuex'
 import { mixinDevice, mixinMqtt, mixinSelectMap } from '@/utils/mixin'
 import { PageView } from '@/layouts'
@@ -98,6 +99,8 @@ export default {
     return {
       switch: null,
       queryParam: {},
+      dataColumn,
+      operateColumn,
       tabList: [
         {
           key: '1',
@@ -115,7 +118,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['deviceOperationLogColumns', 'deviceUploadLogColumns', 'sceneSecurityIdMap']),
+    ...mapGetters(['sceneSecurityIdMap']),
     ...mapState({
       detail: state => state.device.detail,
       deviceTypeMap: state => state.device.deviceTypeMap,
@@ -126,15 +129,10 @@ export default {
     })
   },
   methods: {
-    ...mapActions(['QueryDeviceOperateLogList', 'QueryDeviceDataList', 'QueryDeviceTypeModel']),
+    ...mapActions(['QueryDeviceOperateLogList', 'QueryDeviceDataList']),
     refreshTable () {
-      const { deviceType } = this.detail
-      this.resetTable()
-      this.QueryDeviceTypeModel(deviceType.toLowerCase())
-    },
-    resetTable () {
       const { securityId, deviceType } = this.detail
-      this.queryParam = { deviceSecurityId: securityId, deviceType: deviceType.toLowerCase() }
+      this.queryParam = { deviceSecurityId: securityId, deviceType }
       this.$refs.operationEchoTable.refresh()
       this.$refs.operationTable.refresh()
     },

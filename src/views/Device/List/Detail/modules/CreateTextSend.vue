@@ -1,5 +1,5 @@
 <template>
-  <a-modal destroyOnClose :width="650" :visible="visible" @cancel="handleCancel" @ok="handleSubmit">
+  <a-modal :width="650" :visible="visible" @cancel="handleCancel" @ok="handleSubmit">
     <div class="container">
       <a-tabs :activeKey="activeKey" @change="handleTabChange">
         <a-tab-pane tab="纯文本" :key="0">
@@ -34,8 +34,14 @@ export default {
     create () {
       this.visible = true
     },
+    reset () {
+      this.activeKey = 0
+      this.currentText = ''
+      this.currentJSON = ''
+    },
     handleCancel () {
       this.visible = false
+      this.reset()
     },
     handleSubmit () {
       if (this.activeKey === 1) {
@@ -62,7 +68,7 @@ export default {
     handleFormat () {
       let ret = ''
       try {
-        ret = JSON.stringify(JSON.parse(this.currentJSON), null, '\t')
+        ret = JSON.stringify(JSON.parse(JSON.stringify(this.currentJSON)), null, '\t')
         this.currentJSON = ret
       } catch (error) {
         message.warning('格式错误！')

@@ -2,7 +2,6 @@
  * 设备管理/设备列表
  */
 import { listQueryAdapter, listQueryEchoAdapter } from '@/utils/adapter'
-import deviceTypeModel from '@/model/device/type/index'
 import {
   addDevice,
   updateDevice,
@@ -63,9 +62,6 @@ const device = {
     async QueryDeviceStatus ({ commit }) {
       const { data } = await queryDeviceStatus()
       commit('SET_DEVICE_STATUS_MAP', data)
-    },
-    async QueryDeviceTypeModel ({ commit }, type) {
-      commit('SET_OPERATION_COLUMNS', deviceTypeModel[type] || [])
     },
     async QueryDeviceList ({ commit }, parameter) {
       const { deviceProtocol } = parameter

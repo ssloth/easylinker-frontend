@@ -15,21 +15,12 @@
       <detail-list-item term="备注">{{ detail.info }}</detail-list-item>
     </detail-list>
     <a-row slot="extra" class="status-list">
-      <a-col :xs="12" :sm="12">
-        <div class="text">连接状态</div>
-        <div class="heading">在线</div>
-      </a-col>
-      <a-col :xs="12" :sm="12">
-        <div class="text">开关状态</div>
-        <div class="heading">开启</div>
-      </a-col>
+      <div class="text">连接状态</div>
+      <div class="heading">在线</div>
     </a-row>
     <!-- actions -->
     <template slot="action">
-      <a-button-group>
-        <a-button type="primary" @click="handleOn">打开</a-button>
-        <a-button @click="handleOff">关闭</a-button>
-      </a-button-group>
+      <a-button @click="$refs.createTextSendModal.create()">发送文字</a-button>
     </template>
 
     <!-- 操作 -->
@@ -44,7 +35,7 @@
         rowKey="id"
         ref="operationEchoTable"
         v-show="activeTabKey === '1'"
-        :columns="deviceUploadColumns"
+        :columns="deviceDataColumns"
         :data="deviceDataDataSource"
         showPagination="auto"
       >
@@ -65,6 +56,7 @@
         </template>
       </s-table>
     </a-card>
+    <create-text-send destroyOnClose ref="createTextSendModal" @send="handleSend" @ok="handleOk"></create-text-send>
   </page-view>
 </template>
 
@@ -74,6 +66,8 @@ import { mixinDevice, mixinMqtt, mixinSelectMap } from '@/utils/mixin'
 import { PageView } from '@/layouts'
 import { STable } from '@/components'
 import DetailList from '@/components/tools/DetailList'
+import CreateTextSend from './modules/CreateTextSend'
+import { message } from 'ant-design-vue'
 const DetailListItem = DetailList.Item
 
 export default {
@@ -82,7 +76,8 @@ export default {
     PageView,
     DetailList,
     DetailListItem,
-    STable
+    STable,
+    CreateTextSend
   },
   mixins: [mixinDevice, mixinMqtt, mixinSelectMap],
   mounted () {
@@ -115,7 +110,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['deviceOperationLogColumns', 'deviceUploadLogColumns', 'sceneSecurityIdMap']),
+    ...mapGetters(['deviceOperationLogColumns', 'deviceDataColumns', 'sceneSecurityIdMap']),
     ...mapState({
       detail: state => state.device.detail,
       deviceTypeMap: state => state.device.deviceTypeMap,
@@ -126,16 +121,15 @@ export default {
     })
   },
   methods: {
-    ...mapActions(['QueryDeviceOperateLogList', 'QueryDeviceDataList']),
+    ...mapActions(['QueryDeviceOperateLogList', 'QueryDeviceDataList', 'QueryDeviceTypeModel']),
     refreshTable () {
-      const deviceSecurityId = this.detail.securityId
-      this.queryParam.deviceSecurityId = deviceSecurityId
-      this.$refs.operationEchoTable.refresh()
-      this.$refs.operationTable.refresh()
+      const { deviceType } = this.detail
+      this.resetTable()
+      this.QueryDeviceTypeModel(deviceType)
     },
     resetTable () {
-      const deviceSecurityId = this.detail.securityId
-      this.queryParam = { deviceSecurityId }
+      const { securityId, deviceType } = this.detail
+      this.queryParam = { deviceSecurityId: securityId, deviceType: deviceType }
       this.$refs.operationEchoTable.refresh()
       this.$refs.operationTable.refresh()
     },
@@ -144,7 +138,13 @@ export default {
     },
     handleOff () {
       this.publish(0)
-    }
+    },
+    handleOk () {},
+    handleSend (value) {
+      this.publish(value)
+      message.success(value + ' 发送数据成功！')
+    },
+    handleSendModalShow () {}
   },
   filters: {
     statusFilter (status) {

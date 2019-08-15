@@ -1,5 +1,6 @@
 <template>
   <a-modal
+    destroyOnClose
     title="新建设备"
     :visible="visible"
     :confirmLoading="confirmLoading"
@@ -86,12 +87,12 @@ export default {
       this.editValue = record
       setTimeout(_ =>
         this.form.setFieldsValue({
-          'sn': sn,
-          'name': name,
-          'info': info,
-          'sceneSecurityId': securityId,
-          'deviceType': deviceType,
-          'deviceProtocol': deviceProtocol
+          sn: sn,
+          name: name,
+          info: info,
+          sceneSecurityId: securityId,
+          deviceType: deviceType,
+          deviceProtocol: deviceProtocol
         })
       )
     },
@@ -113,17 +114,18 @@ export default {
             UpdateDevice(values).then(res => {
               this.confirmLoading = false
               this.visible = false
+              this.$emit('ok', values)
             })
           } else {
             AddDevice(values).then(res => {
               this.confirmLoading = false
               this.visible = false
+              this.$emit('ok', values)
             })
           }
         } else {
           this.confirmLoading = false
         }
-        this.$emit('ok', values)
       })
     }
   }

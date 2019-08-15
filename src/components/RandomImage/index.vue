@@ -1,5 +1,5 @@
 <template>
-  <div v-html="image"/>
+  <div v-html="image" />
 </template>
 
 <script>
@@ -16,8 +16,14 @@ export default {
     console.log(this.image)
   },
   props: {
-    value: String,
-    size: Number
+    value: {
+      type: String,
+      default: 'LiuZY'
+    },
+    size: {
+      type: Number,
+      default: 100
+    }
   }
 }
 </script>

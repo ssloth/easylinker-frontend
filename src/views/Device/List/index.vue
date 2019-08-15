@@ -123,7 +123,7 @@
           </template>
         </span>
       </s-table>
-      <create-modal destroyOnClose ref="createModal" @ok="handleOk" />
+      <create-modal ref="createModal" @ok="handleOk" />
     </a-card>
   </page-view>
 </template>
@@ -207,8 +207,7 @@ export default {
     scrollWidth () {
       return this.columns.reduce((acc, value) => {
         if (typeof value.width === 'number') return acc + value.width
-        console.warn('Some columns have no width！')
-        return acc + 150
+        return acc + 200
       }, 0)
     }
   },

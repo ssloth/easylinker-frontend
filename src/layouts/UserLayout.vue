@@ -9,7 +9,7 @@
           <a href="_self">Y</a>
         </div> -->
         <div class="copyright">
-          Copyright &copy; 2019 福州闪麟网络科技有限公司
+          Copyright &copy; 2019 LightWeight-IoT.
         </div>
       </div>
     </div>
@@ -49,21 +49,22 @@ export default {
     }
 
     .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
       width: 100%;
       min-height: 100%;
-      background: #f0f2f5 url(~@/assets/images/login-bg.jpeg) no-repeat;
+      background: #222222;
       background-size: 100%;
-      padding: 150px 0 144px;
-      position: relative;
 
       a {
         text-decoration: none;
       }
 
       .main {
+        flex: 400px;
         min-width: 368px;
-        width: 400px;
-        margin: 0 auto;
+        max-width: 400px;
       }
 
       .footer {

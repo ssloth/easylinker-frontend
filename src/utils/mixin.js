@@ -1,6 +1,8 @@
 // import Vue from 'vue'
 import { deviceEnquire, DEVICE_TYPE } from '@/utils/device'
 import { mapState } from 'vuex'
+import { Message } from 'paho-mqtt'
+import { message } from 'ant-design-vue'
 
 // const mixinsComputed = Vue.config.optionMergeStrategies.computed
 // const mixinsMethods = Vue.config.optionMergeStrategies.methods
@@ -73,4 +75,73 @@ const AppDeviceEnquire = {
   }
 }
 
-export { mixin, AppDeviceEnquire, mixinDevice }
+const mixinSelectMap = {
+  methods: {
+    getNameByKey (map, key) {
+      const result = map.find(item => item.key === key)
+      return result ? result.name : '--'
+    }
+  }
+}
+
+const mixinMqtt = {
+  created () {
+    if (this.subscribe) this.subscribe()
+  },
+  unmounted () {
+    if (this.unsubscribe) this.unsubscribe()
+  },
+  computed: {
+    ...mapState({
+      detail: state => state.device.detail
+    }),
+    topic () {
+      const { deviceProtocol, securityId } = this.detail
+      if (deviceProtocol !== 'MQTT') return null
+      return `/device/${securityId}/`
+    }
+  },
+  methods: {
+    subscribe () {
+      if (/* this.detail.deviceProtocol === 'MQTT' && */ this.$mqtt) {
+        if (!this.$mqtt.isConnected()) return message.error('mqtt 连接失败')
+        message.success('mqtt 连接成功')
+        this.$mqtt.subscribe(this.topic, {
+          qos: 2
+        })
+        this.$mqtt.onMessageArrived = message => {
+          console.log('onMessageArrived:' + message.payloadString)
+        }
+      }
+    },
+    unsubscribe () {
+      if (this.detail.deviceProtocol === 'MQTT' && this.$mqtt) {
+        this.$mqtt.unsubscribe(this.detail.topic)
+        this.$mqtt.onMessageArrived = null
+      }
+    },
+    publish (data) {
+      if (this.detail.deviceProtocol === 'MQTT' && this.$mqtt && this.$mqtt.isConnected()) {
+        let stringData = ''
+        if (typeof data === 'object') {
+          try {
+            stringData = JSON.stringify(data)
+          } catch (error) {}
+        } else {
+          stringData = data
+        }
+        try {
+          const msg = new Message(stringData)
+          msg.destinationName = this.topic + 's2c'
+          console.log('=>', this.topic + 's2c')
+          this.$mqtt.send(msg)
+          message.success('操作成功！')
+        } catch (error) {
+          message.error(error)
+        }
+      }
+    }
+  }
+}
+
+export { mixin, AppDeviceEnquire, mixinDevice, mixinSelectMap, mixinMqtt }

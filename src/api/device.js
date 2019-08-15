@@ -13,9 +13,20 @@ export function addDevice (data) {
 }
 
 /**
+ * 更新设备
+ */
+export function updateDevice (data) {
+  return axios({
+    url: '/easyboot/device/update',
+    method: 'post',
+    data
+  })
+}
+
+/**
  * 查询设备
  */
-export function queryDevice (parameter) {
+export function queryDeviceList (parameter) {
   return axios({
     url: `easyboot/device/list`,
     method: 'get',
@@ -37,10 +48,22 @@ export function queryDeviceDetail (parameter) {
 /**
  * 查询设备数据
  */
-export function queryDeviceData () {
+export function queryDeviceDataList (parameter) {
   return axios({
     url: 'easyboot/deviceData/list',
-    method: 'get'
+    method: 'get',
+    params: parameter
+  })
+}
+
+/**
+ * 查询设备操作日志
+ */
+export function queryDeviceOperateLogList (parameter) {
+  return axios({
+    url: 'easyboot/deviceOperate/listLog',
+    method: 'get',
+    params: parameter
   })
 }
 

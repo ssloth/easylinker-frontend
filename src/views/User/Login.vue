@@ -1,7 +1,7 @@
 <template>
   <div class="main">
     <div class="header">
-      <h1 class="title">Easyliner</h1>
+      <img width="200" src="../../assets/images/logo.jpeg" alt />
     </div>
     <a-form
       id="formLogin"
@@ -50,12 +50,15 @@
           >
             <a-icon slot="prefix" type="code" :style="{ color: 'rgba(0,0,0,.25)' }" />
           </a-input>
-          <img style="width: 40%" :src="'/api/easyboot/captcha/jpg?uuid='+uuid" alt />
+          <img
+            @click="handleCodeImage"
+            style="width: 40%;height:100%;border:1px solid #efefef"
+            :src="'/api/easyboot/captcha/jpg?uuid='+uuid"
+          />
         </a-form-item>
       </a-input-group>
 
       <a-form-item>
-        <a-checkbox v-decorator="['rememberMe']">自动登录</a-checkbox>
         <router-link
           :to="{ name: 'recover', params: { user: 'aaa'} }"
           class="forge-password"
@@ -196,7 +199,15 @@ export default {
 .main {
   padding: 50px 50px 20px 50px;
   background: #ffffff;
-  border-radius: 5%;
+  border-radius: 10px;
+  opacity: 0.5;
+
+  &:hover {
+    transition: all 0.5s;
+    transform: scale(1.05);
+    opacity: 1;
+    box-shadow: 0 0 10px #b5cfff, 0 0 25px #999999, 0 0 100px rgba(255, 255, 255, 0.5);
+  }
 
   .header {
     text-align: center;

@@ -1,5 +1,6 @@
 <template>
   <a-modal
+    destroyOnClose
     title="新建设备"
     :visible="visible"
     :confirmLoading="confirmLoading"
@@ -7,38 +8,32 @@
     @ok="handleSubmit"
   >
     <a-form :form="form">
+      <a-form-item v-if="editValue.sn" label="序列号" :labelCol="labelCol" :wrapperCol="wrapperCol">
+        <a-input disabled v-decorator="['sn']" />
+      </a-form-item>
+
       <a-form-item label="场景名" :labelCol="labelCol" :wrapperCol="wrapperCol">
         <a-select showSearch v-decorator="['sceneSecurityId']">
-          <a-select-option
-            v-for="item in sceneSecurityIdMap"
-            :key="item.key"
-            :value="item.key"
-          >{{ item.name }}</a-select-option>
+          <a-select-option v-for="item in sceneSecurityIdMap" :key="item.key">{{ item.name }}</a-select-option>
         </a-select>
       </a-form-item>
 
       <a-form-item label="设备类型" :labelCol="labelCol" :wrapperCol="wrapperCol">
         <a-select
           showSearch
+          :disabled="editValue.sn !== undefined"
           v-decorator="['deviceType', {rules: [{required: true, message: '请选择设备类型！'}]}]"
         >
-          <a-select-option
-            v-for="item in deviceTypeMap"
-            :key="item.key"
-            :value="item.key"
-          >{{ item.name }}</a-select-option>
+          <a-select-option v-for="item in deviceTypeMap" :key="item.key">{{ item.name }}</a-select-option>
         </a-select>
       </a-form-item>
       <a-form-item label="协议类型" :labelCol="labelCol" :wrapperCol="wrapperCol">
         <a-select
           showSearch
+          :disabled="editValue.sn !== undefined"
           v-decorator="['deviceProtocol',{rules: [{required: true, message: '请选择协议类型！'}]}]"
         >
-          <a-select-option
-            v-for="item in deviceProtocolMap"
-            :key="item.key"
-            :value="item.key"
-          >{{ item.name }}</a-select-option>
+          <a-select-option v-for="item in deviceProtocolMap" :key="item.key">{{ item.name }}</a-select-option>
         </a-select>
       </a-form-item>
       <a-form-item label="设备名" :labelCol="labelCol" :wrapperCol="wrapperCol">
@@ -70,6 +65,7 @@ export default {
       },
       confirmLoading: false,
       visible: false,
+      editValue: {},
       form: this.$form.createForm(this)
     }
   },
@@ -81,29 +77,55 @@ export default {
     ...mapGetters(['sceneSecurityIdMap'])
   },
   methods: {
-    ...mapActions(['AddDevice']),
+    ...mapActions(['AddDevice', 'UpdateDevice']),
     create () {
       this.visible = true
     },
+    edit (record) {
+      const { sn, name, info, securityId, deviceType, deviceProtocol } = record
+      this.visible = true
+      this.editValue = record
+      setTimeout(_ =>
+        this.form.setFieldsValue({
+          sn: sn,
+          name: name,
+          info: info,
+          sceneSecurityId: securityId,
+          deviceType: deviceType,
+          deviceProtocol: deviceProtocol
+        })
+      )
+    },
     handleCancel () {
       this.visible = false
+      this.editValue = {}
+      this.form.resetFields()
     },
     handleSubmit () {
       const {
         AddDevice,
+        UpdateDevice,
         form: { validateFields }
       } = this
 
       validateFields((errors, values) => {
         if (!errors) {
-          AddDevice(values).then(res => {
-            this.confirmLoading = false
-            this.visible = false
-          })
+          if (this.editValue.sn) {
+            UpdateDevice(values).then(res => {
+              this.confirmLoading = false
+              this.visible = false
+              this.$emit('ok', values)
+            })
+          } else {
+            AddDevice(values).then(res => {
+              this.confirmLoading = false
+              this.visible = false
+              this.$emit('ok', values)
+            })
+          }
         } else {
           this.confirmLoading = false
         }
-        this.$emit('ok', values)
       })
     }
   }

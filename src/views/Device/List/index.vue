@@ -134,7 +134,7 @@ import { PageView } from '@/layouts'
 import CreateModal from './modules/Create'
 import { getRoleList } from '@/api/manage'
 import { mapActions, mapGetters, mapState } from 'vuex'
-import * as deviceColumns from '@/model/device/protocol'
+import * as deviceColumns from '@/model/device/list'
 
 const statusMap = {
   0: {

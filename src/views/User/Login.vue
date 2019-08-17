@@ -199,7 +199,15 @@ export default {
 .main {
   padding: 50px 50px 20px 50px;
   background: #ffffff;
-  border-radius: 2%;
+  border-radius: 10px;
+  opacity: 0.5;
+
+  &:hover {
+    transition: all 0.5s;
+    transform: scale(1.05);
+    opacity: 1;
+    box-shadow: 0 0 10px #b5cfff, 0 0 25px #999999, 0 0 100px rgba(255, 255, 255, 0.5);
+  }
 
   .header {
     text-align: center;

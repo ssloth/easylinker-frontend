@@ -1,215 +1,116 @@
 <template>
   <div class="page-header-index-wide">
     <a-row :gutter="24">
-      <a-col :sm="24" :xl="16" :style="{ marginBottom: '24px' }">
+      <a-col :sm="24" :xl="24" :style="{ marginBottom: '24px' }">
         <a-row :gutter="24">
-          <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '24px' }">
-            <chart-card :loading="loading" title="MQTT设备" total="13">
+          <a-col :sm="24" :md="12" :xl="3" :style="{ marginBottom: '24px' }">
+            <chart-card :loading="loading" title="MQTT设备" :total="analyzeData.deviceCount.MQTT.total">
               <a-tooltip title="MQTT设备情况" slot="action">
                 <a-icon type="info-circle-o" />
               </a-tooltip>
               <div>
                 <span flag="up" style="margin-right: 16px;">
                   <span slot="term">在线</span>
-                  12
+                  {{ analyzeData.deviceCount.MQTT.online }}
                 </span>
                 <span flag="down">
                   <span slot="term">离线</span>
-                  1
+                  {{ analyzeData.deviceCount.MQTT.total - analyzeData.deviceCount.MQTT.online }}
                 </span>
               </div>
             </chart-card>
           </a-col>
-          <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '24px' }">
-            <chart-card :loading="loading" title="MQTT设备" total="13">
-              <a-tooltip title="MQTT设备情况" slot="action">
+          <a-col :sm="24" :md="12" :xl="3" :style="{ marginBottom: '24px' }">
+            <chart-card :loading="loading" title="TCP设备" :total="analyzeData.deviceCount.TCP">
+              <a-tooltip title="TCP设备情况" slot="action">
                 <a-icon type="info-circle-o" />
               </a-tooltip>
               <div>
                 <span flag="up" style="margin-right: 16px;">
                   <span slot="term">在线</span>
-                  12
+                  {{ analyzeData.deviceCount.TCP }}
                 </span>
                 <span flag="down">
                   <span slot="term">离线</span>
-                  1
+                  0
                 </span>
               </div>
             </chart-card>
           </a-col>
-          <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '24px' }">
-            <chart-card :loading="loading" title="MQTT设备" total="13">
-              <a-tooltip title="MQTT设备情况" slot="action">
+          <a-col :sm="24" :md="12" :xl="3" :style="{ marginBottom: '24px' }">
+            <chart-card :loading="loading" title="CoAP设备" :total="analyzeData.deviceCount.CoAP">
+              <a-tooltip title="CoAP设备情况" slot="action">
                 <a-icon type="info-circle-o" />
               </a-tooltip>
               <div>
                 <span flag="up" style="margin-right: 16px;">
-                  <span slot="term">在线</span>
-                  12
-                </span>
-                <span flag="down">
-                  <span slot="term">离线</span>
-                  1
+                  <span slot="term">总数</span>
+                  {{ analyzeData.deviceCount.CoAP }}
                 </span>
               </div>
             </chart-card>
           </a-col>
-          <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '24px' }">
-            <chart-card :loading="loading" title="MQTT设备" total="13">
-              <a-tooltip title="MQTT设备情况" slot="action">
+          <a-col :sm="24" :md="12" :xl="3" :style="{ marginBottom: '24px' }">
+            <chart-card :loading="loading" title="HTTP设备" :total="analyzeData.deviceCount.HTTP">
+              <a-tooltip title="HTTP设备情况" slot="action">
                 <a-icon type="info-circle-o" />
               </a-tooltip>
               <div>
                 <span flag="up" style="margin-right: 16px;">
-                  <span slot="term">在线</span>
-                  12
-                </span>
-                <span flag="down">
-                  <span slot="term">离线</span>
-                  1
+                  <span slot="term">总数</span>
+                  {{ analyzeData.deviceCount.HTTP }}
                 </span>
               </div>
             </chart-card>
+          </a-col>
+          <a-col :sm="24" :md="12" :xl="3" :style="{ marginBottom: '24px' }">
+            <chart-card :loading="loading" title="UDP设备" :total="analyzeData.deviceCount.UDP">
+              <a-tooltip title="UDP设备情况" slot="action">
+                <a-icon type="info-circle-o" />
+              </a-tooltip>
+              <div>
+                <span flag="up" style="margin-right: 16px;">
+                  <span slot="term">总数</span>
+                  {{ analyzeData.deviceCount.HTTP }}
+                </span>
+              </div>
+            </chart-card>
+          </a-col>
+          <a-col :sm="24" :xl="9" :style="{ marginBottom: '12px' }">
+            <a-card>
+              <log-list title="重要日志" :list="this.rankList" />
+            </a-card>
           </a-col>
         </a-row>
-        <chart-card :loading="loading" title="总销售额" total="￥126,560">
-          <a-tooltip title="指标说明" slot="action">
-            <a-icon type="info-circle-o" />
-          </a-tooltip>
-          <div>
-            <trend flag="up" style="margin-right: 16px;">
-              <span slot="term">周同比</span>
-              12%
-            </trend>
-            <trend flag="down">
-              <span slot="term">日同比</span>
-              11%
-            </trend>
-          </div>
-          <template slot="footer">
-            日均销售额
-            <span>￥ 234.56</span>
-          </template>
-        </chart-card>
       </a-col>
-      <a-col :sm="24" :xl="8" :style="{ marginBottom: '24px' }">
-        <a-card>
-          <log-list title="重要日志" :list="rankList" />
+      <a-col :xl="12" :lg="24" :md="24" :sm="24" :xs="24">
+        <a-card class="antd-pro-pages-dashboard-analysis-salesCard" :loading="loading" :bordered="false" title="设备类别占比" :style="{ marginBottom: '12px', minHeight: '500px' }">
+          <div slot="extra" style="height: inherit;">
+            <div class="analysis-salesTypeRadio">
+              <a-radio-group defaultValue="a">
+                <a-radio-button value="a">全部设备</a-radio-button>
+              </a-radio-group>
+            </div>
+
+          </div>
+          <h4>设备份额</h4>
+          <div>
+            <!-- style="width: calc(100% - 240px);" -->
+            <div>
+              <v-chart :force-fit="true" :height="405" :data="pieData" :scale="pieScale">
+                <v-tooltip :showTitle="false" dataKey="item*percent" />
+                <v-axis />
+                <!-- position="right" :offsetX="-140" -->
+                <v-legend dataKey="item"/>
+                <v-pie position="percent" color="item" :vStyle="pieStyle" />
+                <v-coord type="theta" :radius="0.75" :innerRadius="0.6" />
+              </v-chart>
+            </div>
+
+          </div>
         </a-card>
       </a-col>
     </a-row>
-
-    <a-row :gutter="24">
-      <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '24px' }">
-        <chart-card :loading="loading" title="总销售额" total="￥126,560">
-          <a-tooltip title="指标说明" slot="action">
-            <a-icon type="info-circle-o" />
-          </a-tooltip>
-          <div>
-            <trend flag="up" style="margin-right: 16px;">
-              <span slot="term">周同比</span>
-              12%
-            </trend>
-            <trend flag="down">
-              <span slot="term">日同比</span>
-              11%
-            </trend>
-          </div>
-          <template slot="footer">
-            日均销售额
-            <span>￥ 234.56</span>
-          </template>
-        </chart-card>
-      </a-col>
-      <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '24px' }">
-        <chart-card :loading="loading" title="访问量" :total="8846 | NumberFormat">
-          <a-tooltip title="指标说明" slot="action">
-            <a-icon type="info-circle-o" />
-          </a-tooltip>
-          <div>
-            <mini-area />
-          </div>
-          <template slot="footer">
-            日访问量
-            <span>{{ '1234' | NumberFormat }}</span>
-          </template>
-        </chart-card>
-      </a-col>
-      <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '24px' }">
-        <chart-card :loading="loading" title="支付笔数" :total="6560 | NumberFormat">
-          <a-tooltip title="指标说明" slot="action">
-            <a-icon type="info-circle-o" />
-          </a-tooltip>
-          <div>
-            <mini-bar />
-          </div>
-          <template slot="footer">
-            转化率
-            <span>60%</span>
-          </template>
-        </chart-card>
-      </a-col>
-      <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '24px' }">
-        <chart-card :loading="loading" title="运营活动效果" total="78%">
-          <a-tooltip title="指标说明" slot="action">
-            <a-icon type="info-circle-o" />
-          </a-tooltip>
-          <div>
-            <mini-progress color="rgb(19, 194, 194)" :target="80" :percentage="78" height="8px" />
-          </div>
-          <template slot="footer">
-            <trend flag="down" style="margin-right: 16px;">
-              <span slot="term">同周比</span>
-              12%
-            </trend>
-            <trend flag="up">
-              <span slot="term">日环比</span>
-              80%
-            </trend>
-          </template>
-        </chart-card>
-      </a-col>
-    </a-row>
-
-    <a-card :loading="loading" :bordered="false" :body-style="{padding: '0'}">
-      <div class="salesCard">
-        <a-tabs
-          default-active-key="1"
-          size="large"
-          :tab-bar-style="{marginBottom: '24px', paddingLeft: '16px'}"
-        >
-          <div class="extra-wrapper" slot="tabBarExtraContent">
-            <div class="extra-item">
-              <a>今日</a>
-              <a>本周</a>
-              <a>本月</a>
-              <a>本年</a>
-            </div>
-            <a-range-picker :style="{width: '256px'}" />
-          </div>
-          <a-tab-pane loading="true" tab="销售额" key="1">
-            <a-row>
-              <a-col :xl="16" :lg="12" :md="12" :sm="24" :xs="24">
-                <bar :data="barData" title="销售额排行" />
-              </a-col>
-              <a-col :xl="8" :lg="12" :md="12" :sm="24" :xs="24">
-                <rank-list title="门店销售排行榜" :list="rankList" />
-              </a-col>
-            </a-row>
-          </a-tab-pane>
-          <a-tab-pane tab="访问量" key="2">
-            <a-row>
-              <a-col :xl="16" :lg="12" :md="12" :sm="24" :xs="24">
-                <bar :data="barData2" title="销售额趋势" />
-              </a-col>
-              <a-col :xl="8" :lg="12" :md="12" :sm="24" :xs="24">
-                <rank-list title="门店销售排行榜" :list="rankList" />
-              </a-col>
-            </a-row>
-          </a-tab-pane>
-        </a-tabs>
-      </div>
-    </a-card>
   </div>
 </template>
 
@@ -227,6 +128,9 @@ import {
 } from '@/components'
 import LogList from './components/LogList'
 import { mixinDevice } from '@/utils/mixin'
+import { mapState } from 'vuex'
+import { queryAnalyzeData, querySyslogListByUser } from '@/api/analysis'
+import { PageView } from '@/layouts'
 
 const barData = []
 const barData2 = []
@@ -242,12 +146,6 @@ for (let i = 0; i < 12; i += 1) {
 }
 
 const rankList = []
-for (let i = 0; i < 7; i++) {
-  rankList.push({
-    name: '白鹭岛 ' + (i + 1) + ' 号店',
-    total: 1234.56 - i * 100
-  })
-}
 
 const searchUserData = []
 for (let i = 0; i < 7; i++) {
@@ -307,12 +205,11 @@ for (let i = 0; i < 50; i += 1) {
 const DataSet = require('@antv/data-set')
 
 const sourceData = [
-  { item: '家用电器', count: 32.2 },
-  { item: '食用酒水', count: 21 },
-  { item: '个护健康', count: 17 },
-  { item: '服饰箱包', count: 13 },
-  { item: '母婴产品', count: 9 },
-  { item: '其他', count: 7.8 }
+  { item: 'MQTT', count: 1 },
+  { item: 'TCP', count: 2 },
+  { item: 'CoAP', count: 3 },
+  { item: 'HTTP', count: 4 },
+  { item: 'UDP', count: 5 }
 ]
 
 const pieScale = [
@@ -344,13 +241,41 @@ export default {
     Bar,
     Trend,
     NumberInfo,
-    MiniSmoothArea
+    MiniSmoothArea,
+    PageView
   },
   data () {
     return {
       loading: true,
       rankList,
-
+      // 查询参数
+      queryParam: {
+        page: 0,
+        size: 10
+      },
+      // 日志信息
+      analyzeLogMap: { },
+      // 分析状态数据
+      analyzeData: {
+        deviceCount: {
+          MQTT: {
+            total: 0,
+            online: 0
+          },
+          TCP: 0,
+          UDP: 0,
+          HTTP: 0,
+          CoAP: 0,
+          scene: 0
+        },
+        typeCount: {
+          TEXT: 0,
+          SWITCH: 0,
+          VALUE: 0,
+          FILE: 0,
+          BOOLEAN: 0
+        }
+      },
       // 搜索用户数
       searchUserData,
       searchUserScale,
@@ -371,9 +296,39 @@ export default {
     }
   },
   created () {
-    setTimeout(() => {
+    queryAnalyzeData().then(res => {
+      this.analyzeData = res.data
+      // 目前存在更改pieData数据时不改变的问题。。。
+      sourceData[0].count = this.analyzeData.deviceCount.MQTT.total
+      sourceData[1].count = this.analyzeData.deviceCount.TCP
+      sourceData[2].count = this.analyzeData.deviceCount.CoAP
+      sourceData[3].count = this.analyzeData.deviceCount.HTTP
+      sourceData[4].count = this.analyzeData.deviceCount.UDP
+      // this.$set(this.sourceData[0], "count",this.analyzeData.deviceCount.MQTT.total)
+      console.log(this.analyzeData.deviceCount.MQTT.total)
       this.loading = !this.loading
-    }, 1000)
+    })
+    querySyslogListByUser(Object.assign(this.queryParam)).then(res => {
+      this.analyzeLogMap = res.data.content
+      for (let i = 0; i < 6; i++) {
+        rankList.push({
+          name: this.analyzeLogMap[i].info,
+          total: this.dateFormat(this.analyzeLogMap[i].createTime)
+        })
+      }
+    })
+  },
+  methods: {
+    dateFormat: function (timeStamp) {
+      var date = new Date(timeStamp)
+      var Y = date.getFullYear() + '-'
+      var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-'
+      var D = date.getDate() + ' '
+      var h = date.getHours() + ':'
+      var m = date.getMinutes() + ':'
+      var s = date.getSeconds()
+      return Y + M + D + h + m + s
+    }
   }
 }
 </script>

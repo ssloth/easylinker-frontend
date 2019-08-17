@@ -11,13 +11,20 @@
       <a-form-item v-if="editValue.sn" label="序列号" :labelCol="labelCol" :wrapperCol="wrapperCol">
         <a-input disabled v-decorator="['sn']" />
       </a-form-item>
-
+      <a-form-item label="设备名" :labelCol="labelCol" :wrapperCol="wrapperCol">
+        <a-input v-decorator="['name', {rules: [{required: true, message: '请输入设备名称！'}]}]" />
+      </a-form-item>
+      <a-form-item label="设备描述" :labelCol="labelCol" :wrapperCol="wrapperCol">
+        <a-input v-decorator="['info', {rules: [{required: true, message: '请输入设备描述！'}]}]" />
+      </a-form-item>
+      <a-form-item label="设备字段" :labelCol="labelCol" :wrapperCol="wrapperCol">
+        <a-select mode="tags" style="width: 100%" @change="handleChange" placeholder="输入设备的字段"></a-select>
+      </a-form-item>
       <a-form-item label="场景名" :labelCol="labelCol" :wrapperCol="wrapperCol">
         <a-select showSearch v-decorator="['sceneSecurityId']">
           <a-select-option v-for="item in sceneSecurityIdMap" :key="item.key">{{ item.name }}</a-select-option>
         </a-select>
       </a-form-item>
-
       <a-form-item label="设备类型" :labelCol="labelCol" :wrapperCol="wrapperCol">
         <a-select
           showSearch
@@ -35,12 +42,6 @@
         >
           <a-select-option v-for="item in deviceProtocolMap" :key="item.key">{{ item.name }}</a-select-option>
         </a-select>
-      </a-form-item>
-      <a-form-item label="设备名" :labelCol="labelCol" :wrapperCol="wrapperCol">
-        <a-input v-decorator="['name', {rules: [{required: true, message: '请输入设备名称！'}]}]" />
-      </a-form-item>
-      <a-form-item label="设备描述" :labelCol="labelCol" :wrapperCol="wrapperCol">
-        <a-input v-decorator="['info', {rules: [{required: true, message: '请输入设备描述！'}]}]" />
       </a-form-item>
     </a-form>
     <template slot="footer">

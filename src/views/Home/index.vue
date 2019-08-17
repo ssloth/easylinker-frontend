@@ -1,113 +1,139 @@
 <template>
   <div class="page-header-index-wide">
-    <a-row :gutter="24">
-      <a-col :sm="24" :xl="24" :style="{ marginBottom: '24px' }">
-        <a-row :gutter="24">
-          <a-col :sm="24" :md="12" :xl="3" :style="{ marginBottom: '24px' }">
-            <chart-card :loading="loading" title="MQTT设备" :total="analyzeData.deviceCount.MQTT.total">
-              <a-tooltip title="MQTT设备情况" slot="action">
-                <a-icon type="info-circle-o" />
-              </a-tooltip>
-              <div>
-                <span flag="up" style="margin-right: 16px;">
-                  <span slot="term">在线</span>
-                  {{ analyzeData.deviceCount.MQTT.online }}
-                </span>
-                <span flag="down">
-                  <span slot="term">离线</span>
-                  {{ analyzeData.deviceCount.MQTT.total - analyzeData.deviceCount.MQTT.online }}
-                </span>
-              </div>
-            </chart-card>
+    <a-row :gutter="16">
+      <a-col :sm="24" :xl="15">
+        <a-row :gutter="6" style="margin-bottom:6px">
+          <a-col class="device-count-list">
+            <div class="list-item">
+              <chart-card
+                :loading="loading"
+                :title="simplify?'MQTT':'MQTT设备'"
+                :total="analyzeData.deviceCount.MQTT.total"
+              >
+                <a-tooltip v-show="!simplify" title="MQTT设备情况" slot="action">
+                  <a-icon type="info-circle-o" />
+                </a-tooltip>
+                <div>
+                  <span flag="up" style="margin-right: 16px;">
+                    <span slot="term">在线</span>
+                    {{ analyzeData.deviceCount.MQTT.online }}
+                  </span>
+                  <span flag="down">
+                    <span slot="term">离线</span>
+                    {{ analyzeData.deviceCount.MQTT.total - analyzeData.deviceCount.MQTT.online }}
+                  </span>
+                </div>
+              </chart-card>
+            </div>
+            <div class="list-item">
+              <chart-card
+                :loading="loading"
+                :title="simplify?'TCP':'TPC设备'"
+                :total="analyzeData.deviceCount.TCP"
+              >
+                <a-tooltip v-show="!simplify" title="TCP设备情况" slot="action">
+                  <a-icon type="info-circle-o" />
+                </a-tooltip>
+                <div>
+                  <span flag="up" style="margin-right: 16px;">
+                    <span slot="term">在线</span>
+                    {{ analyzeData.deviceCount.TCP }}
+                  </span>
+                  <span flag="down">
+                    <span slot="term">离线</span>
+                    0
+                  </span>
+                </div>
+              </chart-card>
+            </div>
+            <div class="list-item">
+              <chart-card
+                :loading="loading"
+                :title="simplify?'CoAP':'CoAP设备'"
+                :total="analyzeData.deviceCount.CoAP"
+              >
+                <a-tooltip title="CoAP设备情况" slot="action">
+                  <a-icon type="info-circle-o" />
+                </a-tooltip>
+                <div>
+                  <span flag="up" style="margin-right: 16px;">
+                    <span slot="term">总数</span>
+                    {{ analyzeData.deviceCount.CoAP }}
+                  </span>
+                </div>
+              </chart-card>
+            </div>
+            <div class="list-item">
+              <chart-card
+                :loading="loading"
+                :title="simplify?'HTTP':'HTTP设备'"
+                :total="analyzeData.deviceCount.HTTP"
+              >
+                <a-tooltip title="HTTP设备情况" slot="action">
+                  <a-icon type="info-circle-o" />
+                </a-tooltip>
+                <div>
+                  <span flag="up" style="margin-right: 16px;">
+                    <span slot="term">总数</span>
+                    {{ analyzeData.deviceCount.HTTP }}
+                  </span>
+                </div>
+              </chart-card>
+            </div>
+            <div class="list-item">
+              <chart-card
+                :loading="loading"
+                :title="simplify?'UDP':'UDP设备'"
+                :total="analyzeData.deviceCount.UDP"
+              >
+                <a-tooltip title="UDP设备情况" slot="action">
+                  <a-icon type="info-circle-o" />
+                </a-tooltip>
+                <div>
+                  <span flag="up" style="margin-right: 16px;">
+                    <span slot="term">总数</span>
+                    {{ analyzeData.deviceCount.HTTP }}
+                  </span>
+                </div>
+              </chart-card>
+            </div>
           </a-col>
-          <a-col :sm="24" :md="12" :xl="3" :style="{ marginBottom: '24px' }">
-            <chart-card :loading="loading" title="TCP设备" :total="analyzeData.deviceCount.TCP">
-              <a-tooltip title="TCP设备情况" slot="action">
-                <a-icon type="info-circle-o" />
-              </a-tooltip>
-              <div>
-                <span flag="up" style="margin-right: 16px;">
-                  <span slot="term">在线</span>
-                  {{ analyzeData.deviceCount.TCP }}
-                </span>
-                <span flag="down">
-                  <span slot="term">离线</span>
-                  0
-                </span>
-              </div>
-            </chart-card>
-          </a-col>
-          <a-col :sm="24" :md="12" :xl="3" :style="{ marginBottom: '24px' }">
-            <chart-card :loading="loading" title="CoAP设备" :total="analyzeData.deviceCount.CoAP">
-              <a-tooltip title="CoAP设备情况" slot="action">
-                <a-icon type="info-circle-o" />
-              </a-tooltip>
-              <div>
-                <span flag="up" style="margin-right: 16px;">
-                  <span slot="term">总数</span>
-                  {{ analyzeData.deviceCount.CoAP }}
-                </span>
-              </div>
-            </chart-card>
-          </a-col>
-          <a-col :sm="24" :md="12" :xl="3" :style="{ marginBottom: '24px' }">
-            <chart-card :loading="loading" title="HTTP设备" :total="analyzeData.deviceCount.HTTP">
-              <a-tooltip title="HTTP设备情况" slot="action">
-                <a-icon type="info-circle-o" />
-              </a-tooltip>
-              <div>
-                <span flag="up" style="margin-right: 16px;">
-                  <span slot="term">总数</span>
-                  {{ analyzeData.deviceCount.HTTP }}
-                </span>
-              </div>
-            </chart-card>
-          </a-col>
-          <a-col :sm="24" :md="12" :xl="3" :style="{ marginBottom: '24px' }">
-            <chart-card :loading="loading" title="UDP设备" :total="analyzeData.deviceCount.UDP">
-              <a-tooltip title="UDP设备情况" slot="action">
-                <a-icon type="info-circle-o" />
-              </a-tooltip>
-              <div>
-                <span flag="up" style="margin-right: 16px;">
-                  <span slot="term">总数</span>
-                  {{ analyzeData.deviceCount.HTTP }}
-                </span>
-              </div>
-            </chart-card>
-          </a-col>
-          <a-col :sm="24" :xl="9" :style="{ marginBottom: '12px' }">
-            <a-card>
-              <log-list title="重要日志" :list="this.rankList" />
+        </a-row>
+        <a-row :gutter="6">
+          <a-col :xl="24">
+            <a-card
+              class="antd-pro-pages-dashboard-analysis-salesCard"
+              :loading="loading"
+              :bordered="false"
+              :style="{ marginBottom: '12px', height: '375px' }"
+            >
+              <a-row>
+                <a-col :xl="12">
+                  <v-chart :force-fit="true" :height="320" :data="pieData" :scale="pieScale">
+                    <v-tooltip :showTitle="false" data-key="item*percent" />
+                    <v-axis />
+                    <v-legend data-key="item" />
+                    <v-pie position="percent" color="item" :vStyle="pieStyle" />
+                    <v-coord type="theta" :radius="0.75" :innerRadius="0.6" />
+                  </v-chart>
+                </a-col>
+                <a-col :xl="12">
+                  <v-chart :force-fit="true" :height="320" :data="pieData" :scale="pieScale">
+                    <v-tooltip :showTitle="false" data-key="item*percent" />
+                    <v-axis />
+                    <v-legend data-key="item" />
+                    <v-pie position="percent" color="item" :vStyle="pieStyle" />
+                    <v-coord type="theta" :radius="0.75" :innerRadius="0.6" />
+                  </v-chart>
+                </a-col>
+              </a-row>
             </a-card>
           </a-col>
         </a-row>
       </a-col>
-      <a-col :xl="12" :lg="24" :md="24" :sm="24" :xs="24">
-        <a-card class="antd-pro-pages-dashboard-analysis-salesCard" :loading="loading" :bordered="false" title="设备类别占比" :style="{ marginBottom: '12px', minHeight: '500px' }">
-          <div slot="extra" style="height: inherit;">
-            <div class="analysis-salesTypeRadio">
-              <a-radio-group defaultValue="a">
-                <a-radio-button value="a">全部设备</a-radio-button>
-              </a-radio-group>
-            </div>
-
-          </div>
-          <h4>设备份额</h4>
-          <div>
-            <!-- style="width: calc(100% - 240px);" -->
-            <div>
-              <v-chart :force-fit="true" :height="405" :data="pieData" :scale="pieScale">
-                <v-tooltip :showTitle="false" dataKey="item*percent" />
-                <v-axis />
-                <!-- position="right" :offsetX="-140" -->
-                <v-legend dataKey="item"/>
-                <v-pie position="percent" color="item" :vStyle="pieStyle" />
-                <v-coord type="theta" :radius="0.75" :innerRadius="0.6" />
-              </v-chart>
-            </div>
-
-          </div>
+      <a-col :sm="24" :xl="9">
+        <a-card>
+          <log-list style="height:500px" title="重要日志" :list="this.logList" />
         </a-card>
       </a-col>
     </a-row>
@@ -116,19 +142,9 @@
 
 <script>
 import moment from 'moment'
-import {
-  ChartCard,
-  MiniArea,
-  MiniBar,
-  MiniProgress,
-  Bar,
-  Trend,
-  NumberInfo,
-  MiniSmoothArea
-} from '@/components'
+import { ChartCard, MiniArea, MiniBar, MiniProgress, Bar, Trend, NumberInfo, MiniSmoothArea } from '@/components'
 import LogList from './components/LogList'
-import { mixinDevice } from '@/utils/mixin'
-import { mapState } from 'vuex'
+import { mixinDevice, mixinWindowSize } from '@/utils/mixin'
 import { queryAnalyzeData, querySyslogListByUser } from '@/api/analysis'
 import { PageView } from '@/layouts'
 
@@ -145,7 +161,7 @@ for (let i = 0; i < 12; i += 1) {
   })
 }
 
-const rankList = []
+const logList = []
 
 const searchUserData = []
 for (let i = 0; i < 7; i++) {
@@ -231,7 +247,7 @@ const pieData = dv.rows
 
 export default {
   name: 'Analysis',
-  mixins: [mixinDevice],
+  mixins: [mixinDevice, mixinWindowSize],
   components: {
     ChartCard,
     MiniArea,
@@ -247,14 +263,17 @@ export default {
   data () {
     return {
       loading: true,
-      rankList,
+      logList,
       // 查询参数
       queryParam: {
         page: 0,
         size: 10
       },
+      // 精简展示 统计表格
+      simplify: false,
+      tooltipShow: true,
       // 日志信息
-      analyzeLogMap: { },
+      analyzeLogMap: {},
       // 分析状态数据
       analyzeData: {
         deviceCount: {
@@ -283,7 +302,6 @@ export default {
       searchData,
 
       barData,
-      barData2,
 
       //
       pieScale,
@@ -293,6 +311,11 @@ export default {
         stroke: '#fff',
         lineWidth: 1
       }
+    }
+  },
+  watch: {
+    windowSize (value) {
+      this.updateSimplify()
     }
   },
   created () {
@@ -310,13 +333,19 @@ export default {
     })
     querySyslogListByUser(Object.assign(this.queryParam)).then(res => {
       this.analyzeLogMap = res.data.content
+      console.log(this.analyzeLogMap)
       for (let i = 0; i < 6; i++) {
-        rankList.push({
-          name: this.analyzeLogMap[i].info,
-          total: this.dateFormat(this.analyzeLogMap[i].createTime)
-        })
+        if (this.analyzeLogMap[i]) {
+          logList.push({
+            name: this.analyzeLogMap[i].info,
+            date: this.dateFormat(this.analyzeLogMap[i].createTime)
+          })
+        }
       }
     })
+  },
+  mounted () {
+    this.$nextTick(() => this.updateSimplify())
   },
   methods: {
     dateFormat: function (timeStamp) {
@@ -328,6 +357,13 @@ export default {
       var m = date.getMinutes() + ':'
       var s = date.getSeconds()
       return Y + M + D + h + m + s
+    },
+    updateSimplify () {
+      const { width } = this.windowSize
+      console.log('windowSize', this.windowSize)
+      if (width > 1680) this.simplify = false
+      else if (width >= 1200) this.simplify = true
+      else this.simplify = false
     }
   }
 }
@@ -344,6 +380,23 @@ export default {
 
     a {
       margin-left: 24px;
+    }
+  }
+}
+
+.device-count-list {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  padding: 0;
+
+  .list-item {
+    flex: 1;
+    margin: 0 5px;
+
+    &:first-child,
+    &:last-child {
+      margin: 0;
     }
   }
 }

@@ -1,11 +1,17 @@
 <template>
   <div class="rank">
-    <h4 class="title">{{ title }}</h4>
     <ul class="list">
       <li :key="index" v-for="(item, index) in list">
-        <span :class="index < 3 ? 'active' : null">{{ index + 1 }}</span>
-        <span>{{ item.name }}</span>
-        <span>{{ item.total }}</span>
+        <div class="status">
+          <a-badge status="default"/>
+        </div>
+        <div class="name">
+          <a-tooltip>
+            <template slot="title">{{ item.name }}</template>
+            {{ item.name }}
+          </a-tooltip>
+        </div>
+        <div class="date">{{ item.date }}</div>
       </li>
     </ul>
   </div>
@@ -14,7 +20,6 @@
 <script>
 export default {
   name: 'RankList',
-  // ['title', 'list']
   props: {
     title: {
       type: String,
@@ -29,49 +34,41 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.rank {
+  .list {
+    padding: 0;
+    list-style: none;
 
-  .rank {
-    padding: 0 32px 32px 32px;
+    li {
+      margin-bottom: 16px;
+      display: flex;
 
-    .list {
-      margin: 25px 0 0;
-      padding: 0;
-      list-style: none;
+      div {
+        color: rgba(0, 0, 0, 0.65);
+        font-size: 14px;
+        line-height: 22px;
+      }
 
-      li {
-        margin-top: 16px;
+      .status {
+        flex:10px 0 0;
+      }
 
-        span {
-          color: rgba(0, 0, 0, .65);
-          font-size: 14px;
-          line-height: 22px;
+      .name {
+        flex: 1;
+        white-space: nowrap;
+        overflow: hidden;
+        margin-right: 10px;
+        text-overflow: ellipsis;
+      }
 
-          &:first-child {
-            background-color: #f5f5f5;
-            border-radius: 20px;
-            display: inline-block;
-            font-size: 12px;
-            font-weight: 600;
-            margin-right: 24px;
-            height: 20px;
-            line-height: 20px;
-            width: 20px;
-            text-align: center;
-          }
-          &.active {
-            background-color: #314659;
-            color: #fff;
-          }
-          &:last-child {
-            float: right;
-          }
-        }
+      .date {
+        flex: 130px 0 0;
       }
     }
   }
+}
 
-  .mobile .rank {
-    padding: 0 32px 32px 32px;
-  }
-
+.mobile .rank {
+  padding: 0 32px 32px 32px;
+}
 </style>

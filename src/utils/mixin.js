@@ -1,4 +1,5 @@
 // import Vue from 'vue'
+import { throttle } from 'lodash'
 import { deviceEnquire, DEVICE_TYPE } from '@/utils/device'
 import { mapState } from 'vuex'
 import { Message } from 'paho-mqtt'
@@ -84,6 +85,33 @@ const mixinSelectMap = {
   }
 }
 
+const mixinWindowSize = {
+  data () {
+    return {
+      windowSize: {}
+    }
+  },
+  mounted () {
+    this.updateWindowSize()
+    window.addEventListener(
+      'resize',
+      throttle(ev => {
+        this.updateWindowSize()
+      }, 500)
+    )
+  },
+  unmounted () {
+    window.removeEventListener('resize')
+  },
+  methods: {
+    updateWindowSize () {
+      const height = window.innerHeight
+      const width = window.innerWidth
+      this.windowSize = { width, height }
+    }
+  }
+}
+
 const mixinMqtt = {
   created () {
     if (this.subscribe) this.subscribe()
@@ -144,4 +172,4 @@ const mixinMqtt = {
   }
 }
 
-export { mixin, AppDeviceEnquire, mixinDevice, mixinSelectMap, mixinMqtt }
+export { mixin, AppDeviceEnquire, mixinDevice, mixinSelectMap, mixinMqtt, mixinWindowSize }

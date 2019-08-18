@@ -14,15 +14,22 @@
       <detail-list-item term="更新时间">{{ detail.updateTime | moment }}</detail-list-item>
       <detail-list-item term="备注">{{ detail.info }}</detail-list-item>
     </detail-list>
-    <a-row slot="extra" class="status-list">
-      <a-col :xs="12" :sm="12">
-        <div class="text">连接状态</div>
-        <div class="heading">在线</div>
-      </a-col>
-      <a-col :xs="12" :sm="12">
-        <div class="text">开关状态</div>
-        <div class="heading">开启</div>
-      </a-col>
+    <a-row slot="extra" class="extra">
+      <div class="code-image">
+        <vue-qrcode :val="detail.sn"></vue-qrcode>
+        <code128 :val="detail.sn"></code128>
+      </div>
+        <!-- <div class="status-list">
+          <div class="text">
+            连接状态
+            <span class="heading">在线</span>
+          </div>
+
+          <div class="text">
+            开关状态
+            <span class="heading">开启</span>
+          </div>
+        </div>-->
     </a-row>
     <!-- actions -->
     <template slot="action">
@@ -69,12 +76,14 @@
 </template>
 
 <script>
+import VueQrcode from '@chenfengyuan/vue-qrcode'
 import { dataColumn, operateColumn } from '@/model/device/detail'
 import { mapActions, mapState, mapGetters } from 'vuex'
 import { mixinDevice, mixinMqtt, mixinSelectMap } from '@/utils/mixin'
 import { PageView } from '@/layouts'
 import { STable } from '@/components'
 import DetailList from '@/components/tools/DetailList'
+import Code128 from '@/components/tools/Code128'
 const DetailListItem = DetailList.Item
 
 export default {
@@ -83,19 +92,21 @@ export default {
     PageView,
     DetailList,
     DetailListItem,
-    STable
+    STable,
+    VueQrcode,
+    Code128
   },
   mixins: [mixinDevice, mixinMqtt, mixinSelectMap],
-  mounted () {
+  mounted() {
     if (Object.keys(this.detail).length === 0) return this.$router.push('/device/list')
     this.refreshTable()
   },
   watch: {
-    $route () {
+    $route() {
       this.refreshTable()
     }
   },
-  data () {
+  data() {
     return {
       switch: null,
       queryParam: {},
@@ -130,28 +141,28 @@ export default {
   },
   methods: {
     ...mapActions(['QueryDeviceOperateLogList', 'QueryDeviceDataList']),
-    refreshTable () {
+    refreshTable() {
       const { securityId, deviceType } = this.detail
       this.queryParam = { deviceSecurityId: securityId, deviceType }
       this.$refs.operationEchoTable.refresh()
       this.$refs.operationTable.refresh()
     },
-    handleOn () {
+    handleOn() {
       this.publish(1)
     },
-    handleOff () {
+    handleOff() {
       this.publish(0)
     }
   },
   filters: {
-    statusFilter (status) {
+    statusFilter(status) {
       const statusMap = {
         agree: '成功',
         reject: '驳回'
       }
       return statusMap[status]
     },
-    statusTypeFilter (type) {
+    statusTypeFilter(type) {
       const statusTypeMap = {
         agree: 'success',
         reject: 'error'
@@ -166,6 +177,7 @@ export default {
 .detail-layout {
   margin-left: 44px;
 }
+
 .text {
   color: rgba(0, 0, 0, 0.45);
 }
@@ -189,14 +201,15 @@ export default {
   }
 }
 
+.extra {
+  .code-image {
+    flex: 300px 0 0;
+  }
+}
+
 .mobile {
   .detail-layout {
     margin-left: unset;
-  }
-  .text {
-  }
-  .status-list {
-    text-align: left;
   }
 }
 </style>

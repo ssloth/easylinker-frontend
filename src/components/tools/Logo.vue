@@ -1,20 +1,17 @@
 <template>
-  <div class="logo">
+  <div class="logo" style="padding-left:16px">
     <router-link :to="{name:'home'}">
-      <LogoSvg alt="logo" />
-      <h1 v-if="showTitle">{{ title }}</h1>
+      <img v-if="showTitle" style="width:180px;height:45px" src="@/assets/logo.png" alt />
+      <div v-else style="width:50px;overflow:hidden">
+        <img style="width:180px;height:45px" src="@/assets/logo.png" alt />
+      </div>
     </router-link>
   </div>
 </template>
 
 <script>
-import LogoSvg from '@/assets/logo.svg?inline'
-
 export default {
   name: 'Logo',
-  components: {
-    LogoSvg
-  },
   props: {
     title: {
       type: String,

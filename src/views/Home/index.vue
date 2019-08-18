@@ -52,7 +52,7 @@
                 :title="simplify?'CoAP':'CoAP设备'"
                 :total="analyzeData.deviceCount.CoAP"
               >
-                <a-tooltip title="CoAP设备情况" slot="action">
+                <a-tooltip v-show="!simplify" title="CoAP设备情况" slot="action">
                   <a-icon type="info-circle-o" />
                 </a-tooltip>
                 <div>
@@ -69,7 +69,7 @@
                 :title="simplify?'HTTP':'HTTP设备'"
                 :total="analyzeData.deviceCount.HTTP"
               >
-                <a-tooltip title="HTTP设备情况" slot="action">
+                <a-tooltip v-show="!simplify" title="HTTP设备情况" slot="action">
                   <a-icon type="info-circle-o" />
                 </a-tooltip>
                 <div>
@@ -86,7 +86,7 @@
                 :title="simplify?'UDP':'UDP设备'"
                 :total="analyzeData.deviceCount.UDP"
               >
-                <a-tooltip title="UDP设备情况" slot="action">
+                <a-tooltip v-show="!simplify" title="UDP设备情况" slot="action">
                   <a-icon type="info-circle-o" />
                 </a-tooltip>
                 <div>
@@ -111,7 +111,6 @@
                 <a-col :xl="12">
                   <v-chart :force-fit="true" :height="320" :data="pieData" :scale="pieScale">
                     <v-tooltip :showTitle="false" data-key="item*percent" />
-                    <v-axis />
                     <v-legend data-key="item" />
                     <v-pie position="percent" color="item" :vStyle="pieStyle" />
                     <v-coord type="theta" :radius="0.75" :innerRadius="0.6" />
@@ -132,7 +131,7 @@
         </a-row>
       </a-col>
       <a-col :sm="24" :xl="9">
-        <a-card>
+        <a-card :bordered="false">
           <log-list style="height:500px" title="重要日志" :list="this.logList" />
         </a-card>
       </a-col>
@@ -141,91 +140,19 @@
 </template>
 
 <script>
-import moment from 'moment'
 import { ChartCard, MiniArea, MiniBar, MiniProgress, Bar, Trend, NumberInfo, MiniSmoothArea } from '@/components'
 import LogList from './components/LogList'
 import { mixinDevice, mixinWindowSize } from '@/utils/mixin'
 import { queryAnalyzeData, querySyslogListByUser } from '@/api/analysis'
 import { PageView } from '@/layouts'
-
-const barData = []
-const barData2 = []
-for (let i = 0; i < 12; i += 1) {
-  barData.push({
-    x: `${i + 1}月`,
-    y: Math.floor(Math.random() * 1000) + 200
-  })
-  barData2.push({
-    x: `${i + 1}月`,
-    y: Math.floor(Math.random() * 1000) + 200
-  })
-}
-
-const logList = []
-
-const searchUserData = []
-for (let i = 0; i < 7; i++) {
-  searchUserData.push({
-    x: moment()
-      .add(i, 'days')
-      .format('YYYY-MM-DD'),
-    y: Math.ceil(Math.random() * 10)
-  })
-}
-const searchUserScale = [
-  {
-    dataKey: 'x',
-    alias: '时间'
-  },
-  {
-    dataKey: 'y',
-    alias: '用户数',
-    min: 0,
-    max: 10
-  }
-]
-
-const searchTableColumns = [
-  {
-    dataIndex: 'index',
-    title: '排名',
-    width: 90
-  },
-  {
-    dataIndex: 'keyword',
-    title: '搜索关键词'
-  },
-  {
-    dataIndex: 'count',
-    title: '用户数'
-  },
-  {
-    dataIndex: 'range',
-    title: '周涨幅',
-    align: 'right',
-    sorter: (a, b) => a.range - b.range,
-    scopedSlots: { customRender: 'range' }
-  }
-]
-const searchData = []
-for (let i = 0; i < 50; i += 1) {
-  searchData.push({
-    index: i + 1,
-    keyword: `搜索关键词-${i}`,
-    count: Math.floor(Math.random() * 1000),
-    range: Math.floor(Math.random() * 100),
-    status: Math.floor((Math.random() * 10) % 2)
-  })
-}
-
 const DataSet = require('@antv/data-set')
 
 const sourceData = [
-  { item: 'MQTT', count: 1 },
-  { item: 'TCP', count: 2 },
-  { item: 'CoAP', count: 3 },
-  { item: 'HTTP', count: 4 },
-  { item: 'UDP', count: 5 }
+  { item: 'MQTT', count: 0 },
+  { item: 'TCP', count: 0 },
+  { item: 'CoAP', count: 0 },
+  { item: 'HTTP', count: 0 },
+  { item: 'UDP', count: 0 }
 ]
 
 const pieScale = [
@@ -235,15 +162,6 @@ const pieScale = [
     formatter: '.0%'
   }
 ]
-
-const dv = new DataSet.View().source(sourceData)
-dv.transform({
-  type: 'percent',
-  field: 'count',
-  dimension: 'item',
-  as: 'percent'
-})
-const pieData = dv.rows
 
 export default {
   name: 'Analysis',
@@ -263,7 +181,7 @@ export default {
   data () {
     return {
       loading: true,
-      logList,
+      logList: [],
       // 查询参数
       queryParam: {
         page: 0,
@@ -272,6 +190,7 @@ export default {
       // 精简展示 统计表格
       simplify: false,
       tooltipShow: true,
+      sourceData,
       // 日志信息
       analyzeLogMap: {},
       // 分析状态数据
@@ -295,18 +214,7 @@ export default {
           BOOLEAN: 0
         }
       },
-      // 搜索用户数
-      searchUserData,
-      searchUserScale,
-      searchTableColumns,
-      searchData,
-
-      barData,
-
-      //
       pieScale,
-      pieData,
-      sourceData,
       pieStyle: {
         stroke: '#fff',
         lineWidth: 1
@@ -318,6 +226,19 @@ export default {
       this.updateSimplify()
     }
   },
+  computed: {
+    pieData () {
+      const dv = new DataSet.View().source(this.sourceData)
+      dv.transform({
+        type: 'percent',
+        field: 'count',
+        dimension: 'item',
+        as: 'percent'
+      })
+      const pieData = dv.rows
+      return pieData
+    }
+  },
   created () {
     queryAnalyzeData().then(res => {
       this.analyzeData = res.data
@@ -327,8 +248,8 @@ export default {
       sourceData[2].count = this.analyzeData.deviceCount.CoAP
       sourceData[3].count = this.analyzeData.deviceCount.HTTP
       sourceData[4].count = this.analyzeData.deviceCount.UDP
-      // this.$set(this.sourceData[0], "count",this.analyzeData.deviceCount.MQTT.total)
       console.log(this.analyzeData.deviceCount.MQTT.total)
+      this.sourceData = sourceData
       this.loading = !this.loading
     })
     querySyslogListByUser(Object.assign(this.queryParam)).then(res => {
@@ -336,7 +257,7 @@ export default {
       console.log(this.analyzeLogMap)
       for (let i = 0; i < 6; i++) {
         if (this.analyzeLogMap[i]) {
-          logList.push({
+          this.logList.push({
             name: this.analyzeLogMap[i].info,
             date: this.dateFormat(this.analyzeLogMap[i].createTime)
           })
@@ -360,9 +281,9 @@ export default {
     },
     updateSimplify () {
       const { width } = this.windowSize
-      console.log('windowSize', this.windowSize)
       if (width > 1680) this.simplify = false
       else if (width >= 1200) this.simplify = true
+      else if (width < 850) this.simplify = true
       else this.simplify = false
     }
   }
@@ -370,6 +291,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
+@import '~ant-design-vue/lib/style/index';
 .extra-wrapper {
   line-height: 55px;
   padding-right: 24px;
@@ -397,6 +319,13 @@ export default {
     &:first-child,
     &:last-child {
       margin: 0;
+    }
+  }
+
+  @media screen and (max-width: @screen-xs) {
+    .list-item {
+      flex: 100%;
+      margin: 6px 5px !important;
     }
   }
 }

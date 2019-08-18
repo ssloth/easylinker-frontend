@@ -18,7 +18,13 @@
         <a-input v-decorator="['info', {rules: [{required: true, message: '请输入设备描述！'}]}]" />
       </a-form-item>
       <a-form-item label="设备字段" :labelCol="labelCol" :wrapperCol="wrapperCol">
-        <a-select mode="tags" style="width: 100%" @change="handleChange" placeholder="输入设备的字段"></a-select>
+        <a-select
+          v-decorator="['dataFields']"
+          mode="tags"
+          style="width: 100%"
+          @change="handleFieldChange"
+          placeholder="输入设备的字段"
+        ></a-select>
       </a-form-item>
       <a-form-item label="场景名" :labelCol="labelCol" :wrapperCol="wrapperCol">
         <a-select showSearch v-decorator="['sceneSecurityId']">
@@ -83,17 +89,18 @@ export default {
       this.visible = true
     },
     edit (record) {
-      const { sn, name, info, securityId, deviceType, deviceProtocol } = record
+      const { sn, name, info, securityId, deviceType, deviceProtocol, dataFields } = record
       this.visible = true
       this.editValue = record
       setTimeout(_ =>
         this.form.setFieldsValue({
-          sn: sn,
-          name: name,
-          info: info,
-          sceneSecurityId: securityId,
-          deviceType: deviceType,
-          deviceProtocol: deviceProtocol
+          sn,
+          name,
+          info,
+          deviceType,
+          deviceProtocol,
+          dataFields,
+          sceneSecurityId: securityId
         })
       )
     },
@@ -102,6 +109,7 @@ export default {
       this.editValue = {}
       this.form.resetFields()
     },
+    handleFieldChange () {},
     handleSubmit () {
       const {
         AddDevice,

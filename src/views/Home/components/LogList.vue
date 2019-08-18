@@ -40,13 +40,12 @@ export default {
     list-style: none;
 
     li {
-      margin-bottom: 16px;
       display: flex;
+      line-height: 1;
 
       div {
         color: rgba(0, 0, 0, 0.65);
         font-size: 14px;
-        line-height: 22px;
       }
 
       .status {

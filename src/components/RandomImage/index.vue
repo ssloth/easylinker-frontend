@@ -12,8 +12,14 @@ export default {
     }
   },
   mounted () {
-    this.image = jdenticon.toSvg(this.value, this.size)
-    console.log(this.image)
+    this.updateImage()
+  },
+  watch: {
+    value () {
+      this.$nextTick(() => {
+        this.updateImage()
+      })
+    }
   },
   props: {
     value: {
@@ -23,6 +29,11 @@ export default {
     size: {
       type: Number,
       default: 100
+    }
+  },
+  methods: {
+    updateImage () {
+      this.image = jdenticon.toSvg(this.value, this.size)
     }
   }
 }

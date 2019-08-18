@@ -1,5 +1,4 @@
-// eslint-disable-next-line
-import { UserLayout, BasicLayout, RouteView, BlankLayout, PageView } from '@/layouts'
+import { UserLayout, BasicLayout, RouteView } from '@/layouts'
 import { bxAnaalyse } from '@/core/icons'
 
 export const asyncRouterMap = [
@@ -15,7 +14,7 @@ export const asyncRouterMap = [
         name: 'control',
         redirect: '/home',
         component: RouteView,
-        meta: { title: '控制中心', keepAlive: true, icon: bxAnaalyse },
+        meta: { title: '控制中心', keepAlive: true, icon: 'appstore' },
         children: [
           {
             path: '/home/index',
@@ -30,7 +29,7 @@ export const asyncRouterMap = [
         name: 'device',
         redirect: '/device/list',
         component: RouteView,
-        meta: { title: '设备管理', keepAlive: true, icon: bxAnaalyse },
+        meta: { title: '设备管理', keepAlive: true, icon: 'database' },
         children: [
           {
             path: '/device/list',
@@ -59,7 +58,7 @@ export const asyncRouterMap = [
         name: 'scene',
         redirect: '/scene/list',
         component: RouteView,
-        meta: { title: '场景管理', keepAlive: true, icon: bxAnaalyse },
+        meta: { title: '场景管理', keepAlive: true, icon: 'bank' },
         children: [
           {
             path: '/scene/list',
@@ -80,18 +79,18 @@ export const asyncRouterMap = [
         name: 'system',
         redirect: '/system/user',
         component: RouteView,
-        meta: { title: '系统管理', keepAlive: true, icon: bxAnaalyse },
+        meta: { title: '系统管理', keepAlive: true, icon: 'setting' },
         children: [
           {
-            path: 'user',
+            path: './user',
             name: 'systemUser',
-            component: () => import('@/views/Home'),
+            component: () => import('@/views/System/User'),
             meta: { title: '用户中心', keepAlive: true }
           },
           {
-            path: 'user',
+            path: './setting',
             name: 'systemSetting',
-            component: () => import('@/views/Home'),
+            component: () => import('@/views/System/Setting'),
             meta: { title: '系统设置', keepAlive: true }
           }
         ]

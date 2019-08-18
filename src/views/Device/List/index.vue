@@ -8,7 +8,7 @@
             :tab="item.name | deviceProtocolFilter"
             :key="item.key"
           ></a-tab-pane>
-          <a-button slot="tabBarExtraContent" @click="$refs.createModal.create()">添加设备</a-button>
+          <a-button type="primary" slot="tabBarExtraContent" @click="$refs.createModal.create()">添加设备</a-button>
         </a-tabs>
       </div>
       <div class="table-page-search-wrapper">
@@ -96,7 +96,9 @@
         :rowSelection="options.rowSelection"
         showPagination="auto"
       >
-        <span class="serial-number" slot="serial" slot-scope="text">{{ text | serialFilter }}</span>
+        <span class="serial-number" slot="serial" slot-scope="text">
+          {{ text | serialFilter }}
+        </span>
         <span slot="name" slot-scope="text">
           <ellipsis :length="20" tooltip>{{ text }}</ellipsis>
         </span>

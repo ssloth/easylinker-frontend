@@ -31,7 +31,7 @@ export default {
   methods: {
     update () {
       this.$nextTick(() => {
-        const { width, height, val } = this
+        const { height, val } = this
         jsbarcode(this.$refs.code128, val, {
           width: 1,
           height: height,

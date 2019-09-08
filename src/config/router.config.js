@@ -1,5 +1,4 @@
 import { UserLayout, BasicLayout, RouteView } from '@/layouts'
-import { bxAnaalyse } from '@/core/icons'
 
 export const asyncRouterMap = [
   {

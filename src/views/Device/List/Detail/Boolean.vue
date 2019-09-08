@@ -19,7 +19,7 @@
         <vue-qrcode :val="detail.sn"></vue-qrcode>
         <code128 :val="detail.sn"></code128>
       </div>
-        <!-- <div class="status-list">
+      <!-- <div class="status-list">
           <div class="text">
             连接状态
             <span class="heading">在线</span>
@@ -97,16 +97,16 @@ export default {
     Code128
   },
   mixins: [mixinDevice, mixinMqtt, mixinSelectMap],
-  mounted() {
+  mounted () {
     if (Object.keys(this.detail).length === 0) return this.$router.push('/device/list')
     this.refreshTable()
   },
   watch: {
-    $route() {
+    $route () {
       this.refreshTable()
     }
   },
-  data() {
+  data () {
     return {
       switch: null,
       queryParam: {},
@@ -141,28 +141,28 @@ export default {
   },
   methods: {
     ...mapActions(['QueryDeviceOperateLogList', 'QueryDeviceDataList']),
-    refreshTable() {
+    refreshTable () {
       const { securityId, deviceType } = this.detail
       this.queryParam = { deviceSecurityId: securityId, deviceType }
       this.$refs.operationEchoTable.refresh()
       this.$refs.operationTable.refresh()
     },
-    handleOn() {
+    handleOn () {
       this.publish(1)
     },
-    handleOff() {
+    handleOff () {
       this.publish(0)
     }
   },
   filters: {
-    statusFilter(status) {
+    statusFilter (status) {
       const statusMap = {
         agree: '成功',
         reject: '驳回'
       }
       return statusMap[status]
     },
-    statusTypeFilter(type) {
+    statusTypeFilter (type) {
       const statusTypeMap = {
         agree: 'success',
         reject: 'error'

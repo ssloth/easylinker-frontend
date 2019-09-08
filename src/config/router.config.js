@@ -1,5 +1,4 @@
 import { UserLayout, BasicLayout, RouteView } from '@/layouts'
-import { bxAnaalyse } from '@/core/icons'
 
 export const asyncRouterMap = [
   {
@@ -20,7 +19,7 @@ export const asyncRouterMap = [
             path: '/home/index',
             name: 'home',
             component: () => import('@/views/Home'),
-            meta: { title: '欢迎', keepAlive: true }
+            meta: { title: 'Dashboard', keepAlive: true }
           }
         ]
       },
@@ -82,13 +81,13 @@ export const asyncRouterMap = [
         meta: { title: '系统管理', keepAlive: true, icon: 'setting' },
         children: [
           {
-            path: './user',
+            path: '/system/user',
             name: 'systemUser',
             component: () => import('@/views/System/User'),
             meta: { title: '用户中心', keepAlive: true }
           },
           {
-            path: './setting',
+            path: '/system/setting',
             name: 'systemSetting',
             component: () => import('@/views/System/Setting'),
             meta: { title: '系统设置', keepAlive: true }
@@ -118,7 +117,7 @@ export const constantRouterMap = [
       {
         path: 'login',
         name: 'login',
-        component: () => import(/* webpackChunkName: "user" */ '@/views/User/Login')
+        component: () => import(/* webpackChunkName: "user" */ '@/views/User/New-Login')
       },
       {
         path: 'register',

@@ -53,6 +53,7 @@ const device = {
     },
     async QueryDeviceType ({ commit }, parameter) {
       const { data } = await queryDeviceType(parameter)
+      console.log(data)
       commit('SET_DEVICE_TYPE_MAP', data)
     },
     async QueryDeviceProtocol ({ commit }, parameter) {

@@ -1,4 +1,6 @@
 import { axios } from '@/utils/request'
+import { listProtocolType, listDeviceType } from '@/api/mock'
+const MOCK_FLAG = true // 临时使用前端配置
 
 /**
  * 添加根据类型添加设备
@@ -71,6 +73,10 @@ export function queryDeviceOperateLogList (parameter) {
  * 查询设备支持协议
  */
 export function queryDeviceProtocol () {
+  if (MOCK_FLAG) {
+    return Promise.resolve(listProtocolType)
+  }
+
   return axios({
     url: 'easyboot/device/listProtocolType',
     method: 'get'
@@ -81,6 +87,10 @@ export function queryDeviceProtocol () {
  * 查询设备支持类型
  */
 export function queryDeviceType () {
+  if (MOCK_FLAG) {
+    return Promise.resolve(listDeviceType)
+  }
+
   return axios({
     url: 'easyboot/device/listDeviceType',
     method: 'get'

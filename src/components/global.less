@@ -1,7 +1,6 @@
 @import './index.less';
 
 body {
-
   &.colorWeak {
     filter: invert(80%);
   }
@@ -377,7 +376,7 @@ body {
     overflow: hidden;
     line-height: 64px;
     background: #002140;
-    transition: all .3s;
+    transition: all 0.3s;
 
     img,
     svg,
@@ -399,6 +398,21 @@ body {
       font-family: Avenir, Helvetica Neue, Arial, Helvetica, sans-serif;
       font-weight: 600;
       vertical-align: middle;
+    }
+  }
+
+  &.dark {
+    background-color: #131619;
+
+    .logo,
+    .ant-menu ,
+    .ant-menu-item,
+    .ant-menu-sub,
+    &.ant-menu-dark{
+      background-color: #131619;
+      &.ant-menu-item-active {
+        background-color: #252729;
+      }
     }
   }
 
@@ -489,6 +503,6 @@ body {
   }
 }
 
-.serial-number{
-  font-family: Consolas,"Courier New",Courier,FreeMono,monospace
+.serial-number {
+  font-family: Consolas, 'Courier New', Courier, FreeMono, monospace;
 }

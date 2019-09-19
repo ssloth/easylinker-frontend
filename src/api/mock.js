@@ -2,9 +2,9 @@ export const listProtocolType = {
   msg: '操作成功',
   code: 0,
   data: [
-    { name: 'HTTP协议设备', key: 'HTTP' },
+    // { name: 'HTTP协议设备', key: 'HTTP' },
+    { name: 'MQTT协议设备', key: 'MQTT' },
     { name: 'CoAP协议设备', key: 'CoAP' }
-    // { name: 'MQTT协议设备', key: 'MQTT' },
     // { name: 'UDP协议设备', key: 'UDP' },
     // { name: 'TCP协议设备', key: 'TCP' }
   ]

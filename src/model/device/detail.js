@@ -1,5 +1,22 @@
 import moment from 'moment'
 
+const createColumns = columns => [
+  ...columns,
+  {
+    title: '创建时间',
+    dataIndex: 'createTime',
+    customRender: date => moment(date).format('YYYY-MM-DD HH:mm:ss'),
+    width: 150
+  },
+  {
+    title: '操作',
+    dataIndex: 'action',
+    width: 150,
+    fixed: 'right',
+    scopedSlots: { customRender: 'action' }
+  }
+]
+
 export const operateColumn = [
   {
     title: '编号',
@@ -79,3 +96,29 @@ export const dataColumn = [
     sorter: true
   }
 ]
+
+export const columnsValue = createColumns([])
+export const columnsText = createColumns([])
+export const columnsBoolean = createColumns([])
+
+export const columnsSwitch = createColumns([
+  {
+    title: '操作内容',
+    dataIndex: 'operate'
+  },
+  {
+    title: '状态',
+    dataIndex: 'status'
+  }
+])
+
+export const columnsFile = createColumns([
+  {
+    title: '文件名',
+    dataIndex: 'name'
+  },
+  {
+    title: '大小',
+    dataIndex: 'size'
+  }
+])

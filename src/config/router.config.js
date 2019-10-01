@@ -38,17 +38,24 @@ export const asyncRouterMap = [
           },
           {
             path: '/device/list/boolean/:id',
-            name: 'bdetail',
+            name: 'deviceBoolean',
             hidden: true,
             component: () => import('@/views/Device/List/Detail/Boolean'),
             meta: { title: '布尔设备-详情', keepAlive: true }
           },
           {
-            path: '/device/list/text/:id',
-            name: 'tdetail',
+            path: '/device/list/value/:id',
+            name: 'deviceValue',
             hidden: true,
-            component: () => import('@/views/Device/List/Detail/Text'),
-            meta: { title: '文本设备-详情', keepAlive: true }
+            component: () => import('@/views/Device/List/Detail/Value'),
+            meta: { title: '数值设备-详情', keepAlive: true }
+          },
+          {
+            path: '/device/list/swtich/:id',
+            name: 'deviceSwitch',
+            hidden: true,
+            component: () => import('@/views/Device/List/Detail/Swtich'),
+            meta: { title: '开关设备-详情', keepAlive: true }
           }
         ]
       },

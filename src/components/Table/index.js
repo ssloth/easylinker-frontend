@@ -37,7 +37,7 @@ export default {
     },
     size: {
       type: String,
-      default: 'default'
+      default: 'middle'
     },
     /**
      * alert: {

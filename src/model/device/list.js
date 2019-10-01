@@ -34,14 +34,14 @@ const createColumns = (columns = []) => [
     title: '创建时间',
     dataIndex: 'createTime',
     customRender: date => moment(date).format('YYYY-MM-DD HH:mm:ss'),
-    width: 225,
+    width: 150,
     sorter: true
   },
   {
     title: '更新时间',
     dataIndex: 'updateTime',
     customRender: date => moment(date).format('YYYY-MM-DD HH:mm:ss'),
-    width: 225,
+    width: 150,
     sorter: true
   },
   {
@@ -59,13 +59,13 @@ export const columnsMQTT = createColumns([
   {
     title: '状态',
     dataIndex: 'deviceStatus',
-    width: 150,
+    width: 100,
     scopedSlots: { customRender: 'deviceStatus' }
   },
   {
     title: '最后活跃时间',
     dataIndex: 'lastActive',
-    width: 200,
+    width: 150,
     scopedSlots: { customRender: 'online' }
   }
 ])

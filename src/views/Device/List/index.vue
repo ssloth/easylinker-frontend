@@ -88,7 +88,7 @@
 
       <s-table
         ref="table"
-        size="default"
+        size="middle"
         rowKey="id"
         :scroll="{ x: scrollWidth}"
         :columns="columns"
@@ -209,7 +209,7 @@ export default {
     scrollWidth () {
       return this.columns.reduce((acc, value) => {
         if (typeof value.width === 'number') return acc + value.width
-        return acc + 200
+        return acc + 150
       }, 0)
     }
   },
